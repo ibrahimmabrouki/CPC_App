@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     int c = 0;
-    int x = 0;
 
 
     @Override
