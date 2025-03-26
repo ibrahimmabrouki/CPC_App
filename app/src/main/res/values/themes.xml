@@ -1,17 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.CPC" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <!-- ... your existing attributes ... -->
     </style>
 
     <style name="Theme.CPC.NoActionBar">
@@ -22,4 +12,11 @@
     <style name="Theme.CPC.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.CPC.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Theme for SplashActivity (without system splash) -->
+    <style name="Theme.CPC.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your splash screen theme here (optional) -->
+        <!-- For example, set a background color: -->
+        <!-- <item name="android:windowBackground">@color/splash_background</item> -->
+    </style>
 </resources>

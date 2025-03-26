@@ -15,7 +15,7 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.CPC.NoActionBar">
+            android:theme="@style/Theme.CPC.Splash">  <!-- Use the correct theme here -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

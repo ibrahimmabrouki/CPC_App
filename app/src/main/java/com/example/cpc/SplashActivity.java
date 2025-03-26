@@ -18,19 +18,19 @@ public class SplashActivity extends AppCompatActivity {
         ImageView frame2 = findViewById(R.id.frame2);
         ImageView finalImage = findViewById(R.id.finalImage);
 
-        frame1.setTranslationX(-400f);
-        frame2.setTranslationX(400f);
+        frame1.setTranslationX(-500f);
+        frame2.setTranslationX(500f);
 
         finalImage.setVisibility(View.INVISIBLE);
         finalImage.setAlpha(0f);
 
         frame1.animate()
-                .translationXBy(400f)
+                .translationXBy(500f)
                 .setDuration(1000)
                 .start();
 
         frame2.animate()
-                .translationXBy(-400f)
+                .translationXBy(-500f)
                 .setDuration(1000)
                 .withEndAction(() -> {
                     frame1.setVisibility(View.GONE);
@@ -45,6 +45,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
             finish();
-        }, 2000);
+        }, 1800);
     }
 }
+
