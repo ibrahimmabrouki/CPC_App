@@ -44,8 +44,10 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, DoctorActivity.class));
+           //startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            //startActivity(new Intent(SplashActivity.this, OPT_page.class));
+
             finish();
         }, 1800);
     }
 }
-
