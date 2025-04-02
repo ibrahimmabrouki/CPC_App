@@ -13,21 +13,27 @@
         android:theme="@style/Theme.CPC"
         tools:targetApi="31">
         <activity
+            android:name=".DoctorActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.CPC.Splash">  <!-- Use the correct theme here -->
+            android:theme="@style/Theme.CPC.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.CPC.NoActionBar"/>
-
+            android:theme="@style/Theme.CPC" />
+        <activity android:name=".PrescriptionActivity" />
+        <activity android:name=".MedicalRecordActivity" />
+        <activity android:name=".LabTestOrderActivity" />
     </application>
 
 </manifest>

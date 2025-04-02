@@ -1,22 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base application theme -->
     <style name="Theme.CPC" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- ... your existing attributes ... -->
+        <item name="colorPrimary">@color/app_bar_color</item>
+        <item name="colorPrimaryVariant">@color/app_bar_color</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/app_bar_color</item>
+        <item name="android:windowBackground">@color/light_gray</item>
     </style>
 
-    <style name="Theme.CPC.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
+    <!-- Optional overlays -->
     <style name="Theme.CPC.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="Theme.CPC.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!-- Theme for SplashActivity (without system splash) -->
+    <!-- Splash theme -->
     <style name="Theme.CPC.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your splash screen theme here (optional) -->
-        <!-- For example, set a background color: -->
-        <!-- <item name="android:windowBackground">@color/splash_background</item> -->
+        <item name="android:windowBackground">@color/splash_background</item>
     </style>
+
 </resources>

@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#010C80</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="primary_dark">#1A237E</color>
+    <color name="primary">#2196F3</color>
+    <color name="accent_green">#4CAF50</color>
+    <color name="blue">#2196F3</color>
+    <color name="green">#4CAF50</color>
+    <color name="app_bar_color">#010C80</color>
 </resources>

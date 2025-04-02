@@ -1,13 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.CPC" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- ... your existing attributes ... -->
+
+    <!-- Base night theme -->
+    <style name="Theme.CPC" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:windowBackground">@color/light_gray</item>
     </style>
 
-    <!-- Theme for SplashActivity (without system splash) - Night Mode -->
-    <style name="Theme.CPC.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your splash screen theme here for night mode (optional) -->
-        <!-- For example, set a background color: -->
-        <!-- <item name="android:windowBackground">@color/splash_background_night</item> -->
+    <!-- Splash for night -->
+    <style name="Theme.CPC.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/splash_background</item>
     </style>
+
 </resources>
