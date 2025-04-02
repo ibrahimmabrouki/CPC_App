@@ -23,7 +23,9 @@ public class SplashActivity extends AppCompatActivity {
         logo.startAnimation(fadeIn);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+           startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            //startActivity(new Intent(SplashActivity.this, OPT_page.class));
+
             finish();
         }, SPLASH_TIME_OUT);
     }

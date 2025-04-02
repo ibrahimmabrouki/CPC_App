@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateAccount">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/createtv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create An Account"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <!-- Email Label -->
+    <TextView
+        android:id="@+id/createtv_email_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email Address"
+        android:textSize="16sp"
+        android:textColor="#555555"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.193" />
+
+    <!-- Phone Label -->
+
+    <!-- Username Input -->
+
+    <TextView
+        android:id="@+id/createtv_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number"
+        android:textColor="#555555"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.413"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/username_card_signup"
+        android:layout_width="409dp"
+        android:layout_height="60dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.077">
+
+        <EditText
+            android:id="@+id/create_ed_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Enter A Valid Username"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888"
+            android:background="@android:color/transparent" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Email Input -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/email_card_signup"
+        android:layout_width="414dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.232">
+
+        <EditText
+            android:id="@+id/create_ed_input_cred"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="Enter your email address"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Password Input -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/password_card_signup"
+        android:layout_width="411dp"
+        android:layout_height="51dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.389">
+
+        <EditText
+            android:id="@+id/create_ed_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Enter a valid password"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888"
+            android:inputType="textPassword"
+            android:background="@android:color/transparent" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Confirm Password Input -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/confirm_password_card"
+        android:layout_width="409dp"
+        android:layout_height="55dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.554">
+
+        <EditText
+            android:id="@+id/create_ed_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Re-enter the password"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888"
+            android:inputType="textPassword"
+            android:background="@android:color/transparent" />
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Already Have an Account -->
+
+    <Button
+        android:id="@+id/btsignunp"
+        android:layout_width="223dp"
+        android:layout_height="53dp"
+        android:backgroundTint="#FF5722"
+        android:text="Sign up"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.719" />
+
+    <TextView
+        android:id="@+id/createtv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account?"
+        android:textColor="#555555"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.206"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.863" />
+
+    <TextView
+        android:id="@+id/createtv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in here"
+        android:textColor="#FF5722"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.719"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.862" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
