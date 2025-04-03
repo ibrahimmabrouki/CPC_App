@@ -1,6 +1,10 @@
 package com.example.cpc;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,4 +46,22 @@ public class DoctorActivity extends AppCompatActivity {
             return true;
         });
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_global_refresh, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof RefreshableFragment) {
+                ((RefreshableFragment) currentFragment).onRefresh();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
