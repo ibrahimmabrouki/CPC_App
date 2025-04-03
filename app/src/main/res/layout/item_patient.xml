@@ -1,43 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/card_background"
     android:padding="16dp"
-    android:layout_marginBottom="12dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_marginBottom="12dp">
+
+    <ImageView
+        android:id="@+id/btn_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/red" />
 
     <TextView
         android:id="@+id/tv_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="John Doe (ID: 1234)"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/btn_delete" />
 
     <TextView
         android:id="@+id/tv_reason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reason: Checkup"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/primary_dark" />
+        android:text="Reason"
+        android:textColor="@color/primary_dark"
+        android:layout_below="@id/tv_name_id"
+        android:layout_marginTop="4dp" />
 
     <LinearLayout
+        android:id="@+id/btn_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="12dp">
+        android:layout_below="@id/tv_reason"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_view"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="View Record"
             android:backgroundTint="@color/blue"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <Space
             android:layout_width="12dp"
@@ -45,11 +57,11 @@
 
         <Button
             android:id="@+id/btn_generate"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Generate"
             android:backgroundTint="@color/green"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
