@@ -12,7 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import java.util.Calendar;
-
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,16 +23,20 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
     private View rootView;
     private LinearLayout scheduleContainer;
     private final String BASE_URL = "http://10.21.166.221/clinic";
-    private final int doctorId = 8;
+    private final int doctorId = 1;
     private String currentSelectedDay = null;
-
+    private TextView weekendMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
         scheduleContainer = rootView.findViewById(R.id.schedule_container);
+        weekendMessage = rootView.findViewById(R.id.weekend_message);
         setupDayClickListeners();
-        selectTodayAutomatically();
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            selectTodayAutomatically();
+        });
         return rootView;
     }
 
@@ -54,21 +58,20 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
     }
 
     private void handleDayClick(TextView clickedDay) {
+        weekendMessage.setVisibility(View.GONE); // Hide message on any manual selection
+
         resetDayTabStyles();
         clickedDay.setBackgroundResource(R.drawable.day_tab_selected);
         clickedDay.setTextColor(getResources().getColor(android.R.color.white));
 
         String shortDay = clickedDay.getText().toString().trim().toLowerCase();
-        String weekday;
+        String weekday = "";
 
-        switch (shortDay) {
-            case "mon": weekday = "Monday"; break;
-            case "tue": weekday = "Tuesday"; break;
-            case "wed": weekday = "Wednesday"; break;
-            case "thu": weekday = "Thursday"; break;
-            case "fri": weekday = "Friday"; break;
-            default: weekday = ""; break;
-        }
+        if (shortDay.equals("mon")) weekday = "Monday";
+        else if (shortDay.equals("tue")) weekday = "Tuesday";
+        else if (shortDay.equals("wed")) weekday = "Wednesday";
+        else if (shortDay.equals("thu")) weekday = "Thursday";
+        else if (shortDay.equals("fri")) weekday = "Friday";
 
         currentSelectedDay = weekday;
         fetchAppointmentsForDay(weekday);
@@ -133,25 +136,33 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
         scheduleContainer.addView(item);
     }
 
-
     private void selectTodayAutomatically() {
         Calendar calendar = Calendar.getInstance();
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // 1 = Sunday, 2 = Monday, ...
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // 1 = Sunday, 7 = Saturday
 
-        TextView targetDay = null;
-        switch (dayOfWeek) {
-            case Calendar.MONDAY: targetDay = rootView.findViewById(R.id.day_mon); currentSelectedDay = "mon"; break;
-            case Calendar.TUESDAY: targetDay = rootView.findViewById(R.id.day_tue); currentSelectedDay = "tue"; break;
-            case Calendar.WEDNESDAY: targetDay = rootView.findViewById(R.id.day_wed); currentSelectedDay = "wed"; break;
-            case Calendar.THURSDAY: targetDay = rootView.findViewById(R.id.day_thu); currentSelectedDay = "thu"; break;
-            case Calendar.FRIDAY: targetDay = rootView.findViewById(R.id.day_fri); currentSelectedDay = "fri"; break;
-            default: return;
-        }
+        boolean isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
 
-        if (targetDay != null) {
-            targetDay.performClick();
+        if (isWeekend) {
+            if (currentSelectedDay == null) {
+                weekendMessage.setVisibility(View.VISIBLE);
+                scheduleContainer.removeAllViews();
+            }
+        } else {
+            weekendMessage.setVisibility(View.GONE);
+            TextView targetDay = null;
+
+            if (dayOfWeek == Calendar.MONDAY) targetDay = rootView.findViewById(R.id.day_mon);
+            else if (dayOfWeek == Calendar.TUESDAY) targetDay = rootView.findViewById(R.id.day_tue);
+            else if (dayOfWeek == Calendar.WEDNESDAY) targetDay = rootView.findViewById(R.id.day_wed);
+            else if (dayOfWeek == Calendar.THURSDAY) targetDay = rootView.findViewById(R.id.day_thu);
+            else if (dayOfWeek == Calendar.FRIDAY) targetDay = rootView.findViewById(R.id.day_fri);
+
+            if (targetDay != null) targetDay.performClick();
         }
     }
+
+
+
     @Override
     public void onRefresh() {
         fetchAppointmentsForDay(currentSelectedDay);

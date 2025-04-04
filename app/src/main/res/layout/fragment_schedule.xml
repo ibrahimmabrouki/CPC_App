@@ -17,6 +17,7 @@
         android:textColor="@color/primary_dark"
         android:layout_marginBottom="12dp" />
 
+    <!-- Day Tabs -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,11 +71,25 @@
             android:focusable="true"/>
     </LinearLayout>
 
+    <!-- Appointment List -->
     <LinearLayout
         android:id="@+id/schedule_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/weekend_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="It’s the weekend! No appointments today ☀️"
+        android:textColor="#000000"
+        android:textAlignment="center"
+        android:background="@drawable/weekend_box"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp"
+        />
 
 </LinearLayout>
