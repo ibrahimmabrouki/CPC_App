@@ -6,9 +6,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class PrescriptionActivity extends AppCompatActivity {
 
     EditText etPatientId, etMedication, etDosage, etInstructions;
+    String doctorId = "";
+    final String BASE_URL = "http://10.0.2.2/clinic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +30,14 @@ public class PrescriptionActivity extends AppCompatActivity {
         etDosage = findViewById(R.id.et_dosage);
         etInstructions = findViewById(R.id.et_instructions);
 
-        // You can also get patient ID from intent later
+        String passedId = getIntent().getStringExtra("patient_id");
+        doctorId = String.valueOf(getIntent().getIntExtra("doctor_id", 0)); // ✅ dynamic doctorId
+
+        if (passedId != null && !passedId.isEmpty()) {
+            etPatientId.setText(passedId);
+            etPatientId.setEnabled(false);
+            etPatientId.setFocusable(false);
+        }
     }
 
     public void submitPrescription(View view) {
@@ -34,8 +51,32 @@ public class PrescriptionActivity extends AppCompatActivity {
             return;
         }
 
-        // Simulate sending to patient
-        Toast.makeText(this, "Prescription submitted successfully!", Toast.LENGTH_LONG).show();
-        finish(); // go back to patient list
+        String url = BASE_URL + "/submitPrescription.php";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    if (response.equalsIgnoreCase("success")) {
+                        Toast.makeText(this, "Prescription submitted!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Submission failed: " + response, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Network error", Toast.LENGTH_SHORT).show()
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("patient_id", patientId);
+                params.put("doctor_id", doctorId); // ✅ dynamic doctor ID sent
+                params.put("medication", medication);
+                params.put("dosage", dosage);
+                params.put("instructions", instructions);
+                return params;
+            }
+        };
+
+        queue.add(request);
     }
 }

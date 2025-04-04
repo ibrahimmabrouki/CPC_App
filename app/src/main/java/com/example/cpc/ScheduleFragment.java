@@ -22,8 +22,8 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
 
     private View rootView;
     private LinearLayout scheduleContainer;
-    private final String BASE_URL = "http://10.0.2.2/clinic";
-    private final int doctorId = 7;
+    private final String BASE_URL = "http://10.21.166.221/clinic";
+    private final int doctorId = 8;
     private String currentSelectedDay = null;
 
 

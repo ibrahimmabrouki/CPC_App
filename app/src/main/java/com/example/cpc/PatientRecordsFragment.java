@@ -27,8 +27,8 @@ public class PatientRecordsFragment extends Fragment implements RefreshableFragm
 
     private RecyclerView recyclerView;
     private PatientAdapter adapter;
-    private final String BASE_URL = "http://10.0.2.2/clinic";
-    private final int doctorId = 7;
+    private final String BASE_URL = "http://10.21.166.221/clinic";
+    private final int doctorId = 8;
 
     @Nullable
     @Override

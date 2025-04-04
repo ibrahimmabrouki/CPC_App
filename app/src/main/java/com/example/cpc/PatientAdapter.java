@@ -72,21 +72,28 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
                 if (id == R.id.menu_prescription) {
                     Intent prescriptionIntent = new Intent(context, PrescriptionActivity.class);
                     prescriptionIntent.putExtra("patient_id", patient.id);
+                    prescriptionIntent.putExtra("doctor_id", doctorId);
                     context.startActivity(prescriptionIntent);
                     return true;
+
                 } else if (id == R.id.menu_medical_record) {
                     Intent medicalIntent = new Intent(context, MedicalRecordActivity.class);
                     medicalIntent.putExtra("patient_id", patient.id);
+                    medicalIntent.putExtra("doctor_id", doctorId);
                     context.startActivity(medicalIntent);
                     return true;
+
                 } else if (id == R.id.menu_lab_test) {
                     Intent labIntent = new Intent(context, LabTestOrderActivity.class);
                     labIntent.putExtra("patient_id", patient.id);
+                    labIntent.putExtra("doctor_id", doctorId);
                     context.startActivity(labIntent);
                     return true;
                 }
+
                 return false;
             });
+
 
             activePopup.show();
         });
