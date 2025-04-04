@@ -15,19 +15,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
 public class NotificationsFragment extends Fragment {
 
-    String currentUser = "abdullah"; // Temporary mock user
-    String[] staffUsers = { "ibrahim", "ranim", "jana", "ahmad" };
+    String currentUserId = "8"; // You can make this dynamic later
+    private final String BASE_URL = "http://10.21.166.221/clinic";
+    private ArrayList<String> staffList = new ArrayList<>();
+    private ArrayAdapter<String> staffAdapter;
+    private ArrayList<String> messages = new ArrayList<>();
+    private ArrayAdapter<String> chatAdapter;
 
     private LinearLayout chatListLayout, chatViewLayout;
     private ListView lvStaff, lvChat;
     private EditText etMessage;
     private Button btnSend;
-
-    private ArrayList<String> messages = new ArrayList<>();
-    private ArrayAdapter<String> chatAdapter;
-
     private String chatWith;
 
     @Nullable
@@ -40,28 +49,26 @@ public class NotificationsFragment extends Fragment {
 
         chatListLayout = rootView.findViewById(R.id.chat_list_layout);
         chatViewLayout = rootView.findViewById(R.id.chat_view_layout);
-
         lvStaff = rootView.findViewById(R.id.lv_staff);
         lvChat = rootView.findViewById(R.id.lv_chat);
         etMessage = rootView.findViewById(R.id.et_message);
         btnSend = rootView.findViewById(R.id.btn_send);
 
-        ArrayAdapter<String> staffAdapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_list_item_1, staffUsers);
+        staffAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, staffList);
         lvStaff.setAdapter(staffAdapter);
 
-        chatAdapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_list_item_1, messages);
+        chatAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, messages);
         lvChat.setAdapter(chatAdapter);
 
+        fetchStaffUsers();
+
         lvStaff.setOnItemClickListener((parent, view, position, id) -> {
-            chatWith = staffUsers[position];
+            chatWith = staffList.get(position);
             chatListLayout.setVisibility(View.GONE);
             chatViewLayout.setVisibility(View.VISIBLE);
             messages.clear();
             chatAdapter.notifyDataSetChanged();
         });
-
 
         btnSend.setOnClickListener(v -> {
             String message = etMessage.getText().toString().trim();
@@ -75,23 +82,27 @@ public class NotificationsFragment extends Fragment {
 
         return rootView;
     }
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (chatViewLayout.getVisibility() == View.VISIBLE) {
-                    chatViewLayout.setVisibility(View.GONE);
-                    chatListLayout.setVisibility(View.VISIBLE);
-                } else {
-                    // Let system handle it (exit app)
-                    setEnabled(false);
-                    requireActivity().onBackPressed();
-                }
-            }
-        });
+    private void fetchStaffUsers() {
+        String url = BASE_URL + "/getStaffUsers.php?current_id=" + currentUserId;
+
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    staffList.clear();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String username = obj.getString("username");
+                            staffList.add(username);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    staffAdapter.notifyDataSetChanged();
+                },
+                error -> Toast.makeText(requireContext(), "Failed to load staff", Toast.LENGTH_SHORT).show());
+
+        queue.add(request);
     }
-
 }
