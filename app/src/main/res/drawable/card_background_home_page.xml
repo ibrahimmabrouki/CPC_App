@@ -1,0 +1,13 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Light blue with 90% opacity -->
+    <solid android:color="#E6E0F1FF" /> <!-- very light bluish tone -->
+
+    <corners android:radius="20dp" />
+    <padding
+        android:left="12dp"
+        android:top="12dp"
+        android:right="12dp"
+        android:bottom="12dp" />
+</shape>

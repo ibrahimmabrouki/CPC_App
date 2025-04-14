@@ -44,24 +44,16 @@ public class SplashActivity extends AppCompatActivity {
                     finalImage.animate().alpha(1f).setDuration(600).start();
                 })
                 .start();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "chat_channel",
-                    "Chat Messages",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Notifications for incoming chat messages");
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
-        }
-
 
         new Handler().postDelayed(() -> {
             startActivity(new Intent(SplashActivity.this, DoctorActivity.class));
             //startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             //startActivity(new Intent(SplashActivity.this, OPT_page.class));
+            //startActivity(new Intent(SplashActivity.this, Home_page.class));
+            //startActivity(new Intent(SplashActivity.this, CreateAccount.class));
+            //startActivity(new Intent(SplashActivity.this, ChangePassword.class));
+
+
 
             finish();
         }, 1800);

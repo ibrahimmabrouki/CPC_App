@@ -1,6 +1,9 @@
 package com.example.cpc;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +12,10 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,6 +35,7 @@ public class ChangePassword extends AppCompatActivity {
     Button btnChangePassword;
 
     String contactValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +46,13 @@ public class ChangePassword extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        createNotificationChannel();
 
         newPasswordInput = findViewById(R.id.newPasswordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         btnChangePassword = findViewById(R.id.btnChangePassword);
         contactValue = getIntent().getStringExtra("contact_value");
-        //contactValue = "ibrahim.mabrouki@lau.edu";
+        //contactValue = "ibrahim.mabrouki@lau.edu"; //for testing
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,14 +82,20 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     private void sendPasswordUpdateRequest(String contactValue, String new_password) {
-        String url = "http://10.0.2.2/testfyp/ResetPassword/update_password.php"; // Adjust this path
+        String url = "http://10.0.2.2/testfyp/ResetPassword/update_password.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response.trim().equalsIgnoreCase("success")) {
-                            Toast.makeText(getApplicationContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                                    ContextCompat.checkSelfPermission(ChangePassword.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+
+                                showOtpNotification("Password Updated", "Your password has been changed successfully.");
+                            }
+
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
                         } else {
@@ -104,5 +119,42 @@ public class ChangePassword extends AppCompatActivity {
         };
 
         Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+    private void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = "Change Password Channel";
+            String description = "Channel for Change Password notifications";
+            int importance = android.app.NotificationManager.IMPORTANCE_HIGH;
+            android.app.NotificationChannel channel = new android.app.NotificationChannel("Change_password_channel", name, importance);
+            channel.setDescription(description);
+
+            android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showOtpNotification(String title, String message) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                //here we are giving the user another chance to accept the notification
+                //line below used for testing
+                //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+                return;
+            }
+        }
+
+        int icon = R.drawable.key_ic_otp;
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Change_password_channel");
+        builder.setSmallIcon(icon);
+        builder.setContentTitle(title);
+        builder.setContentText(message);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1002, builder.build());
     }
 }
