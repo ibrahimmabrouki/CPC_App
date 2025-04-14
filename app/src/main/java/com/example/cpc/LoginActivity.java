@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    final String[] tag = {"Email"}; // Default is "Email"
+    final String[] tag = {"Email"}; // Default contact value is the "Email"
     TextView logintv3, logintv5, logintv6, logintv7,logintv8;
     EditText login_ed_input, login_ed_password;
     Button loginbt;
@@ -63,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                 login_ed_input.setHint("Enter your Phone Number");
                 login_ed_input.setInputType(InputType.TYPE_CLASS_NUMBER);
                 tag[0] = "Phone"; // Update tag to "Email"
+                login_ed_input.setText(""); // Reset input
+                login_ed_input.setError(null); // Clear any lingering errors
             }
         });
 
@@ -73,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                 login_ed_input.setHint("Enter your Email Address");
                 login_ed_input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 tag[0] = "Email"; // Update tag to "Email"
+                login_ed_input.setText(""); // Reset input
+                login_ed_input.setError(null); // Clear any lingering errors
             }
         });
 
@@ -103,28 +107,29 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(login_ed_input.length() > 0){
-                    if(tag[0].equals("Email")){
-                        if(!isValidEmail(login_ed_input.getText().toString().trim())){
-                            login_ed_input.setError("Invalid Email form!");
-                        }
-                    }
+                String inputText = s.toString().trim();
 
-                    if(tag[0].equals("Phone")){
-                        if(!isValidPhone(login_ed_input.getText().toString().trim())){
-                            login_ed_input.setError("Invalid Phone Number!");
-                        }
+                if (tag[0].equals("Email")) {
+                    // wait for at least 5 characters before validating
+                    if (!inputText.isEmpty() && inputText.length() >= 5 && !isValidEmail(inputText)) {
+                        login_ed_input.setError("Invalid Email format!");
+                    }
+                }
+
+                if (tag[0].equals("Phone")) {
+                    // wait for full 8 digits before validating
+                    if (!inputText.isEmpty() && inputText.length() >= 8 && !isValidPhone(inputText)) {
+                        login_ed_input.setError("Invalid Phone Number!");
                     }
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
-        //change password activity
+
+        //transition to change password activity
         logintv5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //moving to create account section
+        //moving to create account activity
         logintv8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,15 +152,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String input = login_ed_input.getText().toString().trim();
                 String password = login_ed_password.getText().toString().trim();
+
                 if(!isValidEmail(input) && tag[0].equals("Email")){
                     Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
                 }
+
                 else if(!isValidPhone(input) && tag[0].equals("Phone")){
                     Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
                 }
+
                 else if(!isValidPassword(password)){
                     Toast.makeText(getApplicationContext(), "Invalid password", Toast.LENGTH_SHORT).show();
                 }
+
                 else{loginUser(input, password);}
             }
         });
@@ -163,12 +172,14 @@ public class LoginActivity extends AppCompatActivity {
 
     // Helper method to validate password
     private boolean isValidPassword(String password) {
-        return password.length() >= 8; // Example: Minimum length requirement
+        return password.length() >= 8;
+        // Example: Minimum length requirement
     }
 
     // Helper method to validate phone number
     private boolean isValidPhone(String phone) {
-        return phone.matches("\\d{8}"); // Example: 10-digit number validation
+        return phone.matches("\\d{8}");
+        // Example: 10-digit number validation
     }
 
     // Helper method to validate email
@@ -180,7 +191,6 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser(String input, String password) {
         String url = "http://10.0.2.2/testfyp/login.php";
 
-        // Create the StringRequest for POST request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -211,11 +221,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Unknown user type: " + userType, Toast.LENGTH_SHORT).show();
                             }
 
-
-
-                            Toast.makeText(getApplicationContext(), "User Login successfully", Toast.LENGTH_SHORT).show();
-                            //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        } else {
+                        }
+                        else {
                             Toast.makeText(getApplicationContext(), "login failed", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -236,11 +243,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        // Add the request to the RequestQueue
         Volley.newRequestQueue(this).add(stringRequest);
     }
-
-
-
-
 }

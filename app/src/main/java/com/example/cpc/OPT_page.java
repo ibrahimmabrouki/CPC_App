@@ -1,7 +1,12 @@
 package com.example.cpc;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -10,9 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
+
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -45,6 +57,15 @@ public class OPT_page extends AppCompatActivity {
             return insets;
         });
 
+        //section below for testing
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }*/
+
+        createNotificationChannel();
+
         contactInput = findViewById(R.id.contactInput);
         otpInput = findViewById(R.id.otpInput);
         verifyBtn = findViewById(R.id.verifyBtn);
@@ -60,10 +81,11 @@ public class OPT_page extends AppCompatActivity {
                 }
 
                 if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
-                    Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
                 }
                 else if (isProbablyPhone(contactInfo) && isValidPhone(contactInfo)) {
+                    //Toast.makeText(getApplicationContext(), "this is a valid phone number", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
 
                 }
@@ -119,10 +141,11 @@ public class OPT_page extends AppCompatActivity {
                 }
 
                 else if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
-                    Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
                 }
                 else if (isProbablyPhone(contactInfo) && isValidPhone(contactInfo)) {
+                    //Toast.makeText(getApplicationContext(), "this is a valid phone", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
 
                 }
@@ -164,10 +187,11 @@ public class OPT_page extends AppCompatActivity {
                         if (response.trim().equalsIgnoreCase("true")) {
                             requestOtp(contactValue);
                             contactExists[0] = true;
+
                         }
 
                         else {
-                            Toast.makeText(OPT_page.this, "User does not exist", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(OPT_page.this, "User does not exist", Toast.LENGTH_SHORT).show();
                             contactExists[0] = false;
                             contactInput.setError("user not exists!");
                             // Maybe show an error or block next step
@@ -177,7 +201,7 @@ public class OPT_page extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         contactInput.setError("user not exists!");
                     }
                 }) {
@@ -193,19 +217,26 @@ public class OPT_page extends AppCompatActivity {
     }
 
     private void requestOtp(String contactValue) {
-        String url = "http://10.0.2.2/testfyp/send_otp.php"; // Update this if on real server
+        String url = "http://10.0.2.2/testfyp/send_otp.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                        startResendCountdown();
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                                ContextCompat.checkSelfPermission(OPT_page.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+
+                            showOtpNotification("OTP Sent", "Check your Email for the 6-digit code.");
+                        }
+
+                        //Toast.makeText(getApplicationContext(), "OTP sent successfully!", Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
         ) {
@@ -220,14 +251,15 @@ public class OPT_page extends AppCompatActivity {
     }
 
     private void verifyOtp(String contactValue, String otpCode) {
-        String url = "http://10.0.2.2/testfyp/ResetPassword/verify_otp.php"; // Update this to your correct server path
+        String url = "http://10.0.2.2/testfyp/ResetPassword/verify_otp.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if (response.trim().equalsIgnoreCase("true")) {
-                            // You can now allow the user to reset the password
+
+                            // now allow the user to reset the password
                             Intent change_password = new Intent(getApplicationContext(), ChangePassword.class);
                             change_password.putExtra("contact_value", contactValue);
                             startActivity(change_password);
@@ -253,5 +285,106 @@ public class OPT_page extends AppCompatActivity {
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
+    //This method includes a count down that allows the user to resend the code only
+    //after passing 5 mins
+    private void startResendCountdown() {
+        resendText.setEnabled(false);
+        resendText.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        new CountDownTimer(300000, 1000) { // 5 minutes = 300000ms
+
+            public void onTick(long millisUntilFinished) {
+                long seconds = millisUntilFinished / 1000;
+                long minutes = seconds / 60;
+                long remainingSeconds = seconds % 60;
+                resendText.setText(String.format("Resend in %02d:%02d", minutes, remainingSeconds));
+            }
+
+            public void onFinish() {
+                resendText.setEnabled(true);
+                resendText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+                resendText.setText("Resend Code");
+
+            }
+
+        }.start();
+    }
+
+    private void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = "OTP Channel";
+            String description = "Channel for OTP notifications";
+            int importance = android.app.NotificationManager.IMPORTANCE_HIGH;
+            android.app.NotificationChannel channel = new android.app.NotificationChannel("otp_channel", name, importance);
+            channel.setDescription(description);
+
+            android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showOtpNotification(String title, String message) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                //here we are giving the user another chance to accept the notification
+                //line below used for testing
+                //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+                return;
+            }
+        }
+
+        int icon = R.drawable.key_ic_otp;
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "otp_channel");
+        builder.setSmallIcon(icon);
+        builder.setContentTitle(title);
+        builder.setContentText(message);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1001, builder.build());
+    }
+
+
+    //used for testing
+    /*@Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showOtpNotification("OTP Sent", "Check your Email for the 6-digit code.");
+            }
+            else {
+                boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS);
+                if (!showRationale) {
+                    // User checked "Don't ask again"
+                    AlertDialog.Builder settings = new AlertDialog.Builder(this);
+                    settings.setTitle("Permission Required");
+                    settings.setMessage("To receive notifications, please enable notification permission from app settings.");
+                    settings.setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    });
+                    settings.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    settings.show();
+                }
+                else {
+                    Toast.makeText(this, "Notification permission is required to show alerts.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }*/
 
 }

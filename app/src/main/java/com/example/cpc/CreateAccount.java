@@ -27,6 +27,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.cpc.LoginActivity;
+import com.example.cpc.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,23 +62,41 @@ public class CreateAccount extends AppCompatActivity {
         create_ed_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // No action needed before text changes
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(create_ed_username.length() > 0){
-                    if(!isValidUsername(create_ed_username.getText().toString().trim())){
+                String username = s.toString().trim();
+
+                if (!username.isEmpty()) {
+                    if (!isValidUsername(username)) {
                         create_ed_username.setError("Invalid username!");
                     }
+                    else {
+                        checkUsernameAvailability(username, new UsernameCheckCallback() {
+                            @Override
+                            public void onResult(boolean isAvailable) {
+                                if (!isAvailable) {
+                                    create_ed_username.setError("Username already used!");
+                                }
+                                else {
+                                    create_ed_username.setError(null);
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    create_ed_username.setError(null);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
+
 
         createtv_email_address.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,31 +125,48 @@ public class CreateAccount extends AppCompatActivity {
         create_ed_input_cred.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(create_ed_input_cred.length() > 0){
-                    if(tag[0].equals("Email")){
-                        if(!isValidEmail(create_ed_input_cred.getText().toString().trim())){
-                            create_ed_input_cred.setError("Invalid Email form!");
+                String input = s.toString().trim();
+
+                if (!input.isEmpty()) {
+                    if (tag[0].equals("Email")) {
+                        if (!isValidEmail(input)) {
+                            create_ed_input_cred.setError("Invalid email format!");
+                            return; // Don't check availability
                         }
                     }
 
-                    if(tag[0].equals("Phone")){
-                        if(!isValidPhone(create_ed_input_cred.getText().toString().trim())){
-                            create_ed_input_cred.setError("Invalid Phone Number!");
+                    else if (tag[0].equals("Phone")) {
+                        if (!isValidPhone(input)) {
+                            create_ed_input_cred.setError("Invalid phone number!");
+                            return;
                         }
                     }
+
+                    checkContactAvailability(input, new ContactCheckCallback() {
+                        @Override
+                        public void onResult(boolean isAvailable) {
+                            if (!isAvailable) {
+                                create_ed_input_cred.setError("This contact is already used!");
+                            } else {
+                                create_ed_input_cred.setError(null);
+                            }
+                        }
+                    });
+                }
+                else {
+                    create_ed_input_cred.setError(null);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
+
 
         create_ed_password.addTextChangedListener(new TextWatcher() {
             @Override
@@ -176,62 +213,68 @@ public class CreateAccount extends AppCompatActivity {
         btsignunp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AlertDialog.Builder termsOfService = new AlertDialog.Builder(CreateAccount.this);  // or MainActivity.this
-
-                //Requires setting of icon
-                // termsOfService.setIcon();
-
+                AlertDialog.Builder termsOfService = new AlertDialog.Builder(CreateAccount.this);
                 termsOfService.setTitle("Consent to terms of services");
-
-                termsOfService.setMessage("agree to to terms of service");
+                termsOfService.setMessage("Agree to terms of service");
 
                 termsOfService.setPositiveButton("I agree", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String type = tag[0];
-                        String input = create_ed_input_cred.getText().toString().trim();
-                        String username = create_ed_username.getText().toString().trim();
-                        String password = create_ed_password.getText().toString().trim();
+                        final String type = tag[0];
+                        final String input = create_ed_input_cred.getText().toString().trim();
+                        final String username = create_ed_username.getText().toString().trim();
+                        final String password = create_ed_password.getText().toString().trim();
 
-                        if(!isValidUsername(username)){
+                        // Validate inputs
+                        if (!isValidUsername(username)) {
                             Toast.makeText(CreateAccount.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                        else if(!isValidPassword(password)){
+
+                        if (!isValidPassword(password)) {
                             Toast.makeText(CreateAccount.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                        else if(!isValidEmail(input) && tag[0].equals("Email")){
+
+                        if (type.equals("Email") && !isValidEmail(input)) {
                             Toast.makeText(CreateAccount.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                        else if(!isValidPhone(input) && tag[0].equals("Phone")){
+
+                        if (type.equals("Phone") && !isValidPhone(input)) {
                             Toast.makeText(CreateAccount.this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
-                        else{
-                            signUpUser(type, input, password, username);
-                        }
+                        checkUsernameAvailability(username, new UsernameCheckCallback() {
+                            @Override
+                            public void onResult(boolean isUsernameAvailable) {
+                                if (!isUsernameAvailable) {
+                                    create_ed_username.setError("Choose another username");
+                                    return;
+                                }
+
+                                checkContactAvailability(input, new ContactCheckCallback() {
+                                    @Override
+                                    public void onResult(boolean isContactAvailable) {
+                                        if (!isContactAvailable) {
+                                            create_ed_input_cred.setError("Choose another contact Value");
+                                        }
+                                        else{
+                                            signUpUser(type, input, password, username);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
 
-                termsOfService.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //restoring to the default state.
-
-                        create_ed_input_cred.setInputType(InputType.TYPE_CLASS_TEXT);
-                        tag[0] = "Email";
-                        create_ed_username.setText("");
-                        create_ed_input_cred.setText("");
-                        create_ed_password.setText("");
-                        create_ed_confirm.setText("");
-                        dialog.dismiss();
-                    }
-                });
-
-                Dialog termsofservice_form = termsOfService.create();
-                termsofservice_form.show();
+                termsOfService.setNegativeButton("Cancel", null);
+                termsOfService.show();
             }
         });
+
 
 
 
@@ -284,7 +327,7 @@ public class CreateAccount extends AppCompatActivity {
                         //Log.d("SERVER_RESPONSE", response); used for debugging
                         if (response.contains("Success")) {
                             Toast.makeText(getApplicationContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
-                            //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         } else {
                             Toast.makeText(getApplicationContext(), "Registration failed", Toast.LENGTH_SHORT).show();
                         }
@@ -311,5 +354,92 @@ public class CreateAccount extends AppCompatActivity {
         // Add the request to the RequestQueue
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
+
+    private void checkUsernameAvailability(String username, UsernameCheckCallback callback) {
+        String url = "http://10.0.2.2/testfyp/check_username.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        response = response.trim();
+                        if (response.equalsIgnoreCase("USED")) {
+                            callback.onResult(false); // used
+                        }
+                        else if (response.equalsIgnoreCase("NOT USED")) {
+                            callback.onResult(true);  // available
+                        }
+                        else {
+                            //Toast.makeText(getApplicationContext(), "Unexpected response: " + response, Toast.LENGTH_SHORT).show();
+                            callback.onResult(false); // Treat as unavailable
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        callback.onResult(false);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("username", username);
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+
+    private void checkContactAvailability(String contactValue, ContactCheckCallback callback) {
+        String url = "http://10.0.2.2/testfyp/check_contact_value.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        response = response.trim();
+                        if (response.equalsIgnoreCase("USED")) {
+                            callback.onResult(false); //  used
+                        }
+                        else if (response.equalsIgnoreCase("NOT USED")) {
+                            callback.onResult(true);  // available
+                        }
+                        else {
+                            callback.onResult(false);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onResult(false); // Treat as used
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("contact_value", contactValue);
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+
+    public interface UsernameCheckCallback {
+        void onResult(boolean isAvailable);
+    }
+    public interface ContactCheckCallback {
+        void onResult(boolean isAvailable);
+    }
+
+
+
 
 }
