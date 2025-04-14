@@ -31,8 +31,8 @@ import java.util.Random;
 public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
-    private final String BASE_URL = "http://10.21.166.221/clinic";
-    private String currentUserId = "2"; // You can make this dynamic later
+    private final String BASE_URL = "http://10.21.186.199/clinic";
+    private String currentUserId = "1"; // You can make this dynamic later
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +115,7 @@ public class DoctorActivity extends AppCompatActivity {
                             JSONObject obj = response.getJSONObject(i);
                             String senderId = obj.getString("sender_id");
                             String content = obj.getString("message");
-                            int read = obj.getInt("read"); // 👈 get read status
+                            int read = obj.getInt("read");
 
                             if (read == 0) { // Only show if unread
                                 getUsernameById(senderId, username -> {

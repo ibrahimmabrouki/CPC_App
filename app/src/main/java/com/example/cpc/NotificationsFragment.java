@@ -44,9 +44,9 @@ import org.json.JSONObject;
 
 public class NotificationsFragment extends Fragment implements RefreshableFragment{
 
-    String currentUserId = "2"; // You can make this dynamic later
+    String currentUserId = "1"; // You can make this dynamic later
     String currentUsername = null;
-    private final String BASE_URL = "http://10.21.166.221/clinic";
+    private final String BASE_URL = "http://10.21.186.199/clinic";
     private ArrayList<String> staffList = new ArrayList<>();
     private ArrayAdapter<String> staffAdapter;
     private ArrayList<String> messages = new ArrayList<>();

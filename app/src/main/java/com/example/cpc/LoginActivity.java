@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Log.d("SERVER_RESPONSE", userType); used for debugging
 
-                            if (userType.equals("Doctor")) {
+                            if (userType.equals("Doctor")) {  //put also id with the intent as an extra
                                 Toast.makeText(getApplicationContext(), "Logged in as Doctor", Toast.LENGTH_SHORT).show();
                                 // startActivity(new Intent(getApplicationContext(), DoctorDashboard.class));
                             }

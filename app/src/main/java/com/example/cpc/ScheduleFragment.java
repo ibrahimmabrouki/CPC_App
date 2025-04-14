@@ -22,10 +22,11 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
 
     private View rootView;
     private LinearLayout scheduleContainer;
-    private final String BASE_URL = "http://10.21.166.221/clinic";
+    private final String BASE_URL = "http://10.21.186.199/clinic";
     private final int doctorId = 1;
     private String currentSelectedDay = null;
     private TextView weekendMessage;
+    private boolean hasSelectedToday = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,8 +36,12 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
         setupDayClickListeners();
 
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            selectTodayAutomatically();
+            if (!hasSelectedToday) {
+                selectTodayAutomatically();
+                hasSelectedToday = true;
+            }
         });
+
         return rootView;
     }
 
@@ -58,11 +63,7 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
     }
 
     private void handleDayClick(TextView clickedDay) {
-        weekendMessage.setVisibility(View.GONE); // Hide message on any manual selection
-
-        resetDayTabStyles();
-        clickedDay.setBackgroundResource(R.drawable.day_tab_selected);
-        clickedDay.setTextColor(getResources().getColor(android.R.color.white));
+        if (!isAdded()) return;
 
         String shortDay = clickedDay.getText().toString().trim().toLowerCase();
         String weekday = "";
@@ -73,12 +74,22 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
         else if (shortDay.equals("thu")) weekday = "Thursday";
         else if (shortDay.equals("fri")) weekday = "Friday";
 
-        currentSelectedDay = weekday;
-        fetchAppointmentsForDay(weekday);
+        // Always update UI regardless of currentSelectedDay
+        weekendMessage.setVisibility(View.GONE);
+        resetDayTabStyles();
+        clickedDay.setBackgroundResource(R.drawable.day_tab_selected);
+        clickedDay.setTextColor(getResources().getColor(android.R.color.white));
+
+        // Only fetch if different
+        if (!weekday.equals(currentSelectedDay)) {
+            currentSelectedDay = weekday;
+            fetchAppointmentsForDay(weekday);
+        }
     }
 
 
     private void resetDayTabStyles() {
+        if (!isAdded()) return;
         int[] ids = {
                 R.id.day_mon,
                 R.id.day_tue,
@@ -137,16 +148,16 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
     }
 
     private void selectTodayAutomatically() {
+        if (!isAdded() || currentSelectedDay != null) return;
+
         Calendar calendar = Calendar.getInstance();
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK); // 1 = Sunday, 7 = Saturday
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         boolean isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
 
         if (isWeekend) {
-            if (currentSelectedDay == null) {
-                weekendMessage.setVisibility(View.VISIBLE);
-                scheduleContainer.removeAllViews();
-            }
+            weekendMessage.setVisibility(View.VISIBLE);
+            scheduleContainer.removeAllViews();
         } else {
             weekendMessage.setVisibility(View.GONE);
             TextView targetDay = null;
@@ -157,15 +168,24 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
             else if (dayOfWeek == Calendar.THURSDAY) targetDay = rootView.findViewById(R.id.day_thu);
             else if (dayOfWeek == Calendar.FRIDAY) targetDay = rootView.findViewById(R.id.day_fri);
 
-            if (targetDay != null) targetDay.performClick();
+            final TextView finalTargetDay = targetDay;
+            if (finalTargetDay != null && isAdded()) {
+                finalTargetDay.post(() -> {
+                    if (isAdded()) {
+                        finalTargetDay.performClick();
+                    }
+                });
+            }
         }
     }
 
 
-
     @Override
     public void onRefresh() {
-        fetchAppointmentsForDay(currentSelectedDay);
+        if (currentSelectedDay != null) {
+            fetchAppointmentsForDay(currentSelectedDay);
+        } else {
+            selectTodayAutomatically();
+        }
     }
-
 }
