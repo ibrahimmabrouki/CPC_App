@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_overview"
+        android:icon="@drawable/ic_dashboard"
+        android:title="Overview" />
+    <item
+        android:id="@+id/nav_storage"
+        android:icon="@drawable/ic_storage"
+        android:title="Storage" />
+    <item
+        android:id="@+id/nav_prescriptions"
+        android:icon="@drawable/ic_prescription"
+        android:title="Prescriptions" />
+    <item
+        android:id="@+id/nav_notifications"
+        android:icon="@drawable/ic_message"
+        android:title="Messages" />
+</menu>
