@@ -5,94 +5,103 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9F9F9"
     tools:context=".LoginActivity">
 
     <!-- Title -->
-
-    <!-- Welcome Message -->
-
-    <!-- Username Label -->
-
-    <!-- Username Input-->
-
-    <!-- Email and Phone Labels -->
-
     <TextView
         android:id="@+id/logintv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:textColor="#333333"
-        android:textSize="24sp"
+        android:textColor="#002366"
+        android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.02"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+
+    <!-- Welcome Message -->
     <TextView
         android:id="@+id/logintv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Welcome Back to The App"
-        android:textColor="#555555"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:text="Welcome back to the app 👋"
+        android:textColor="#666666"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.02"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/logintv1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.075" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <TextView
         android:id="@+id/logintv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif"
         android:text="Email Address"
         android:textColor="#555555"
-        android:textSize="16sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.128" />
+        app:layout_constraintVertical_bias="0.171" />
 
     <TextView
         android:id="@+id/logintv6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/clickable_tab"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="88dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:text="Email Address"
-        android:textColor="#555555"
+        android:textColor="#002366"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.222" />
-
-    <!-- Email Input -->
+        app:layout_constraintVertical_bias="0.255" />
 
     <TextView
         android:id="@+id/logintv7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/clickable_tab"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="88dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:text="Phone Number"
-        android:textColor="#555555"
+        android:textColor="#002366"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.024"
+        app:layout_constraintHorizontal_bias="0.135"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/logintv6"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.255" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/email_card"
@@ -103,7 +112,7 @@
         app:layout_constraintTop_toBottomOf="@id/logintv6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginHorizontal="16dp">
 
         <EditText
@@ -113,7 +122,7 @@
             android:hint="Enter your Email Address"
             android:padding="16dp"
             android:textColor="#000000"
-            android:textColorHint="#888888"
+            android:textColorHint="#999999"
             android:background="@android:color/transparent" />
     </androidx.cardview.widget.CardView>
 
@@ -139,20 +148,8 @@
             android:inputType="textPassword"
             android:padding="16dp"
             android:textColor="#000000"
-            android:textColorHint="#888888" />
+            android:textColorHint="#999999" />
     </androidx.cardview.widget.CardView>
-
-    <!-- Checkbox
-    <CheckBox
-        android:id="@+id/cb1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/keep_signed_in"
-        android:textColor="#555555"
-        app:layout_constraintTop_toBottomOf="@id/password_card"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />-->
 
     <!-- Forgot Password -->
 
@@ -160,47 +157,59 @@
 
     <!-- Create Account -->
 
-
     <TextView
         android:id="@+id/logintv5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
         android:text="Forget Password?"
         android:textColor="#FF5722"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.651" />
+        app:layout_constraintVertical_bias="0.552" />
 
     <Button
         android:id="@+id/loginbt"
         android:layout_width="206dp"
         android:layout_height="55dp"
-        android:backgroundTint="#FF5722"
+        android:backgroundTint="#002366"
         android:elevation="4dp"
         android:text="Login"
         android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.582" />
+        app:layout_constraintVertical_bias="0.71" />
 
     <TextView
         android:id="@+id/logintv8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="228dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/clickable_tab"
+        android:gravity="center"
+        android:minWidth="88dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:text="Create an account"
         android:textColor="#FF5722"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.582" />
+        app:layout_constraintVertical_bias="0.815" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
