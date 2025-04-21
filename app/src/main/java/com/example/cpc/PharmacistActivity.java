@@ -32,7 +32,7 @@ import java.util.Random;
 public class PharmacistActivity extends AppCompatActivity {
 
     private final String BASE_URL = "http://10.21.148.28/clinic";
-    private String currentUserId;  // dynamically passed later
+    private String currentUserId;
     private Handler pollingHandler;
     private Runnable pollingRunnable;
 
@@ -57,8 +57,8 @@ public class PharmacistActivity extends AppCompatActivity {
                 selectedFragment = new PharmacistOverviewFragment();
             } else if (id == R.id.nav_storage) {
                 selectedFragment = new StorageFragment();
-//            } else if (id == R.id.nav_prescriptions) {
-//                selectedFragment = new PrescriptionFragment();
+            } else if (id == R.id.nav_prescriptions) {
+                selectedFragment = new PharmacistPrescriptionFragment();
             } else if (id == R.id.nav_notifications) {
                 selectedFragment = new NotificationsFragment();
             }

@@ -31,7 +31,7 @@ public class PrescriptionActivity extends AppCompatActivity {
         etInstructions = findViewById(R.id.et_instructions);
 
         String passedId = getIntent().getStringExtra("patient_id");
-        doctorId = String.valueOf(getIntent().getIntExtra("doctor_id", 0)); // ✅ dynamic doctorId
+        doctorId = String.valueOf(getIntent().getIntExtra("doctor_id", 0));
 
         if (passedId != null && !passedId.isEmpty()) {
             etPatientId.setText(passedId);

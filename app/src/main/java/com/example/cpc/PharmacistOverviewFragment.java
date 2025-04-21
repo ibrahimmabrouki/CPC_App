@@ -28,6 +28,7 @@ public class PharmacistOverviewFragment extends Fragment implements RefreshableF
     private TextView tvAnnouncements, tvGreeting;
     private String pharmacistId;
     private final String BASE_URL = "http://10.21.148.28/clinic";
+    private TextView tvLowStock;
 
     @Nullable
     @Override
@@ -37,6 +38,7 @@ public class PharmacistOverviewFragment extends Fragment implements RefreshableF
 
         tvAnnouncements = view.findViewById(R.id.tvAnnouncements);
         tvGreeting = view.findViewById(R.id.tvGreeting);
+        tvLowStock = view.findViewById(R.id.tvLowStock);
 
         if (getArguments() != null) {
             pharmacistId = getArguments().getString("user_id", "2");
@@ -45,6 +47,7 @@ public class PharmacistOverviewFragment extends Fragment implements RefreshableF
         fetchPharmacistName();
         fetchAnnouncements();
         setupSuggestionForm(view);
+        fetchLowStockMedicines();
 
         return view;
     }
@@ -130,9 +133,41 @@ public class PharmacistOverviewFragment extends Fragment implements RefreshableF
         queue.add(request);
     }
 
+    private void fetchLowStockMedicines() {
+        String url = BASE_URL + "/getLowStock.php";
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    if (response.length() == 0) {
+                        tvLowStock.setText("No low stock medicines.");
+                        return;
+                    }
+
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String name = obj.getString("name");
+                            int qty = obj.getInt("quantity");
+                            builder.append("• ").append(name).append(" (Qty: ").append(qty).append(")\n");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    tvLowStock.setText(builder.toString().trim());
+                },
+                error -> {
+                    tvLowStock.setText("Error loading low stock data.");
+                });
+
+        queue.add(request);
+    }
+
     @Override
     public void onRefresh() {
         fetchAnnouncements();
         fetchPharmacistName();
+        fetchLowStockMedicines();
     }
 }
