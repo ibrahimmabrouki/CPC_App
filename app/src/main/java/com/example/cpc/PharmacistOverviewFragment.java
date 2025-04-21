@@ -27,7 +27,7 @@ public class PharmacistOverviewFragment extends Fragment implements RefreshableF
 
     private TextView tvAnnouncements, tvGreeting;
     private String pharmacistId;
-    private final String BASE_URL = "http://192.168.1.100/clinic";
+    private final String BASE_URL = "http://10.21.148.28/clinic";
 
     @Nullable
     @Override

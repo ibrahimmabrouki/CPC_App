@@ -31,7 +31,7 @@ import java.util.Random;
 
 public class PharmacistActivity extends AppCompatActivity {
 
-    private final String BASE_URL = "http://10.21.186.199/clinic";
+    private final String BASE_URL = "http://10.21.148.28/clinic";
     private String currentUserId;  // dynamically passed later
     private Handler pollingHandler;
     private Runnable pollingRunnable;

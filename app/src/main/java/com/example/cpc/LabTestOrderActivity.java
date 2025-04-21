@@ -17,7 +17,7 @@ import java.util.Map;
 public class LabTestOrderActivity extends AppCompatActivity {
 
     EditText etPatientId, etTestName, etReason, etInstructions;
-    final String BASE_URL = "http://10.0.2.2/clinic";
+    final String BASE_URL = "http://10.21.148.28/clinic";
     int doctorId;
 
     @Override

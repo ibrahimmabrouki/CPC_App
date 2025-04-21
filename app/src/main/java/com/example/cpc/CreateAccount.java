@@ -321,7 +321,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void signUpUser(String type, String input, String password, String username) {
-        String url = "http://10.0.2.2/testfyp/signup.php";
+        String url = "http://10.21.148.28/testfyp/signup.php";
 
         // Create the StringRequest for POST request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

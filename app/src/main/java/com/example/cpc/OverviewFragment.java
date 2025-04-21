@@ -28,7 +28,7 @@ public class OverviewFragment extends Fragment implements RefreshableFragment{
 
     private TextView tvAppointments, tvAnnouncements;
     private String doctorId;
-    private final String BASE_URL = "http://10.21.186.199/clinic";
+    private final String BASE_URL = "http://10.21.148.28/clinic";
     private TextView tvGreeting;
 
     @Nullable

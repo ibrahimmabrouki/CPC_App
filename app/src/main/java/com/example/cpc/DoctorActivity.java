@@ -31,7 +31,7 @@ import java.util.Random;
 public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
-    private final String BASE_URL = "http://10.21.186.199/clinic";
+    private final String BASE_URL = "http://10.21.148.28/clinic";
     private String currentUserId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

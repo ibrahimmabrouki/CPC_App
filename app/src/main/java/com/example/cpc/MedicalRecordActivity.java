@@ -15,7 +15,7 @@ import java.util.Map;
 public class MedicalRecordActivity extends AppCompatActivity {
 
     EditText etPatientId, etDiagnosis, etSymptoms, etNotes;
-    final String BASE_URL = "http://10.0.2.2/clinic";
+    final String BASE_URL = "http://10.21.148.28/clinic";
     int doctorId;
 
     @Override

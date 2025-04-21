@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class StorageFragment extends Fragment implements RefreshableFragment{
 
-    private final String BASE_URL = "http://192.168.93.36/clinic";
+    private final String BASE_URL = "http://10.21.148.28/clinic";
     private LinearLayout storageContainer;
 
     @Override
