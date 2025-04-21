@@ -5,19 +5,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class StorageFragment extends Fragment {
+import java.util.HashMap;
+import java.util.Map;
 
-    private final String BASE_URL = "http://10.21.186.199/clinic";
+public class StorageFragment extends Fragment implements RefreshableFragment{
+
+    private final String BASE_URL = "http://192.168.93.36/clinic";
     private LinearLayout storageContainer;
 
     @Override
@@ -62,21 +69,56 @@ public class StorageFragment extends Fragment {
         TextView nameView = item.findViewById(R.id.tvMedicineName);
         TextView qtyView = item.findViewById(R.id.tvQuantity);
         ImageView imgView = item.findViewById(R.id.imgMedicine);
+        Button btnPlus = item.findViewById(R.id.btnIncrease);
+        Button btnMinus = item.findViewById(R.id.btnDecrease);
 
         nameView.setText(name);
         qtyView.setText("Quantity: " + quantity);
 
-        try {
-            int imageResId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
-            if (imageResId != 0) {
-                imgView.setImageResource(imageResId);
-            } else {
-                imgView.setImageResource(R.drawable.placeholder);
+        // Load image
+        int imageResId = getResources().getIdentifier(imageName, "drawable", requireContext().getPackageName());
+        imgView.setImageResource(imageResId != 0 ? imageResId : R.drawable.placeholder);
+
+        final int[] currentQty = {quantity};
+
+        btnPlus.setOnClickListener(v -> {
+            currentQty[0]++;
+            qtyView.setText("Quantity: " + currentQty[0]);
+            updateQuantityInDatabase(name, currentQty[0]);
+        });
+
+        btnMinus.setOnClickListener(v -> {
+            if (currentQty[0] > 0) {
+                currentQty[0]--;
+                qtyView.setText("Quantity: " + currentQty[0]);
+                updateQuantityInDatabase(name, currentQty[0]);
             }
-        } catch (Resources.NotFoundException e) {
-            imgView.setImageResource(R.drawable.placeholder);
-        }
+        });
 
         storageContainer.addView(item);
+    }
+
+    private void updateQuantityInDatabase(String name, int newQuantity) {
+        String url = BASE_URL + "/updateMedicineQuantity.php";
+
+        Volley.newRequestQueue(requireContext()).add(new StringRequest(Request.Method.POST, url,
+                response -> {
+                },
+                error -> {
+                    Toast.makeText(getContext(), "Failed to update quantity", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("quantity", String.valueOf(newQuantity));
+                return params;
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchMedicines();
     }
 }
