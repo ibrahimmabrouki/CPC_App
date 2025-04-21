@@ -32,18 +32,25 @@ public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
     private final String BASE_URL = "http://10.21.186.199/clinic";
-    private String currentUserId = "1"; // You can make this dynamic later
+    private String currentUserId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor);
+        currentUserId = getIntent().getStringExtra("user_id");
 
         // Set default fragment
         if (savedInstanceState == null) {
+            OverviewFragment overviewFragment = new OverviewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("user_id", currentUserId);
+            overviewFragment.setArguments(bundle);
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new OverviewFragment())
+                    .replace(R.id.fragment_container, overviewFragment)
                     .commit();
         }
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -61,6 +68,10 @@ public class DoctorActivity extends AppCompatActivity {
             }
 
             if (selectedFragment != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("user_id", currentUserId);
+                selectedFragment.setArguments(bundle);
+
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
                         .commit();

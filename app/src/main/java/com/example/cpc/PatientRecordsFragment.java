@@ -28,7 +28,8 @@ public class PatientRecordsFragment extends Fragment implements RefreshableFragm
     private RecyclerView recyclerView;
     private PatientAdapter adapter;
     private final String BASE_URL = "http://10.21.186.199/clinic";
-    private final int doctorId = 1;
+    private String doctorIdn;
+    private int doctorId;
 
     @Nullable
     @Override
@@ -38,6 +39,10 @@ public class PatientRecordsFragment extends Fragment implements RefreshableFragm
 
         recyclerView = rootView.findViewById(R.id.rv_patients);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        doctorIdn = getArguments().getString("user_id");
+        if (doctorIdn != null) {
+            doctorId = Integer.parseInt(doctorIdn);
+        }
 
         fetchPatientsFromBackend();
 

@@ -32,7 +32,7 @@ import java.util.Random;
 public class PharmacistActivity extends AppCompatActivity {
 
     private final String BASE_URL = "http://10.21.186.199/clinic";
-    private String currentUserId = "7";  // dynamically passed later
+    private String currentUserId;  // dynamically passed later
     private Handler pollingHandler;
     private Runnable pollingRunnable;
 
@@ -41,9 +41,7 @@ public class PharmacistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pharmacist);
 
-        // Receive user ID from intent (adjust as needed)
-        //currentUserId = getIntent().getStringExtra("user_id");
-
+        currentUserId = getIntent().getStringExtra("user_id");
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new PharmacistOverviewFragment())

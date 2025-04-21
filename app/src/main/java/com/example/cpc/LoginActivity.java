@@ -236,8 +236,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if (userType.equals("Pharmacist")) {
                                 successImage.setImageResource(R.drawable.pharmacist_toast_bg);
-                                //showCustomToast("Logged in as Pharmacist");
-                              //  intent = new Intent(getApplicationContext(), PharmacyDashboard.class);
+                                showCustomToast("Logged in as Pharmacist");
+                                intent = new Intent(getApplicationContext(), PharmacistActivity.class);
 
                             }
                             else if (userType.equals("Labratory")) {

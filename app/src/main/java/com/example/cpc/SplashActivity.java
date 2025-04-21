@@ -47,10 +47,10 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             //startActivity(new Intent(SplashActivity.this, DoctorActivity.class));
-            startActivity(new Intent(SplashActivity.this, PharmacistActivity.class));
+            //startActivity(new Intent(SplashActivity.this, PharmacistActivity.class));
             //startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             //startActivity(new Intent(SplashActivity.this, OPT_page.class));
-            //startActivity(new Intent(SplashActivity.this, Home_page.class));
+            startActivity(new Intent(SplashActivity.this, Home_page.class));
             //startActivity(new Intent(SplashActivity.this, CreateAccount.class));
             //startActivity(new Intent(SplashActivity.this, ChangePassword.class));
 

@@ -27,7 +27,7 @@ import java.util.Map;
 public class OverviewFragment extends Fragment implements RefreshableFragment{
 
     private TextView tvAppointments, tvAnnouncements;
-    private final int doctorId = 1;
+    private String doctorId;
     private final String BASE_URL = "http://10.21.186.199/clinic";
     private TextView tvGreeting;
 
@@ -37,6 +37,7 @@ public class OverviewFragment extends Fragment implements RefreshableFragment{
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
+        doctorId = getArguments().getString("user_id");
         tvAppointments = view.findViewById(R.id.tvAppointments);
         tvAnnouncements = view.findViewById(R.id.tvAnnouncements);
         tvGreeting = view.findViewById(R.id.tvGreeting);

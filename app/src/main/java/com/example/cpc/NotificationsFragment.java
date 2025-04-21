@@ -44,7 +44,7 @@ import org.json.JSONObject;
 
 public class NotificationsFragment extends Fragment implements RefreshableFragment{
 
-    String currentUserId = "1"; // You can make this dynamic later
+    String currentUserId;
     String currentUsername = null;
     private final String BASE_URL = "http://10.21.186.199/clinic";
     private ArrayList<String> staffList = new ArrayList<>();
@@ -73,6 +73,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
+        currentUserId = getArguments().getString("user_id");
         chatListLayout = rootView.findViewById(R.id.chat_list_layout);
         chatViewLayout = rootView.findViewById(R.id.chat_view_layout);
         lvStaff = rootView.findViewById(R.id.lv_staff);

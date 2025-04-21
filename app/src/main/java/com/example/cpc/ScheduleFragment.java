@@ -23,7 +23,7 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
     private View rootView;
     private LinearLayout scheduleContainer;
     private final String BASE_URL = "http://10.21.186.199/clinic";
-    private final int doctorId = 1;
+    private String doctorId;
     private String currentSelectedDay = null;
     private TextView weekendMessage;
     private boolean hasSelectedToday = false;
@@ -33,6 +33,7 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
         rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
         scheduleContainer = rootView.findViewById(R.id.schedule_container);
         weekendMessage = rootView.findViewById(R.id.weekend_message);
+        doctorId = getArguments().getString("user_id");
         setupDayClickListeners();
 
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
@@ -112,7 +113,7 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    scheduleContainer.removeAllViews(); // Clear old data
+                    scheduleContainer.removeAllViews();
                     if (response.length() == 0) {
                         addScheduleItem("No appointments scheduled.");
                         return;
@@ -121,7 +122,7 @@ public class ScheduleFragment extends Fragment implements RefreshableFragment{
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
-                            String time = obj.getString("time").substring(0, 5); // HH:mm
+                            String time = obj.getString("time").substring(0, 5);
                             String patient = obj.getString("patient_name");
                             addScheduleItem(time + " - " + patient);
                         } catch (Exception e) {

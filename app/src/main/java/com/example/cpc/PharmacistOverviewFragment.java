@@ -26,7 +26,7 @@ import java.util.Map;
 public class PharmacistOverviewFragment extends Fragment implements RefreshableFragment {
 
     private TextView tvAnnouncements, tvGreeting;
-    private String pharmacistId = "7";
+    private String pharmacistId;
     private final String BASE_URL = "http://192.168.1.100/clinic";
 
     @Nullable
