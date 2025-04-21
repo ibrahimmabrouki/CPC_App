@@ -293,6 +293,8 @@ public class LoginActivity extends AppCompatActivity {
         TextView toastText = layout.findViewById(R.id.toast_text);
         toastText.setText(message);
 
+        ImageView custom_icon = layout.findViewById(R.id.custom_icon);
+        custom_icon.setImageResource(R.drawable.ic_check);
         Toast toast = new Toast(getApplicationContext());
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);

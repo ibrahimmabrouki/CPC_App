@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -60,13 +65,13 @@ public class ChangePassword extends AppCompatActivity {
                 String new_confirm_password = confirmPasswordInput.getText().toString().trim();
 
                 if(!isValidPassword(new_password)){
-                    Toast.makeText(ChangePassword.this, "Invalid new password", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Invalid new password", R.drawable.ic_uncheck);
                 }
                 else if(!isValidPassword(new_confirm_password)) {
-                    Toast.makeText(ChangePassword.this, "Invalid new confirm password", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Invalid new confirm password", R.drawable.ic_uncheck);
                 }
                 else if(!new_password.equals(new_confirm_password)){
-                    Toast.makeText(ChangePassword.this, "Confirm password Does not match", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Confirm password Does not match", R.drawable.ic_uncheck);
                 }
                 else{
                     sendPasswordUpdateRequest(contactValue, new_password);
@@ -96,9 +101,20 @@ public class ChangePassword extends AppCompatActivity {
                                 showOtpNotification("Password Updated", "Your password has been changed successfully.");
                             }
 
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
-                        } else {
+                            setContentView(R.layout.activity_success_screen);
+                            ImageView successImage = findViewById(R.id.success_image);
+                            successImage.setImageResource(R.drawable.ic_changed_password);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                    finish();
+                                }
+                            }, 2000);
+
+                        }
+                        else {
                             Toast.makeText(getApplicationContext(), "Failed to update password", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -156,5 +172,21 @@ public class ChangePassword extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1002, builder.build());
+    }
+
+    private void showCustomToast(String message, int icon) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast, null);
+
+        TextView toastText = layout.findViewById(R.id.toast_text);
+        toastText.setText(message);
+
+        ImageView custom_icon = layout.findViewById(R.id.custom_icon);
+        custom_icon.setImageResource(icon);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.setGravity(Gravity.CENTER, 0, -100);
+        toast.show();
     }
 }

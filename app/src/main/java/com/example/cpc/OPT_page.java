@@ -3,16 +3,21 @@ package com.example.cpc;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
@@ -77,7 +82,7 @@ public class OPT_page extends AppCompatActivity {
             public void onClick(View v) {
                 String contactInfo = contactInput.getText().toString().trim();
                 if(TextUtils.isEmpty(contactInfo)){
-                    Toast.makeText(OPT_page.this, "Please enter a valid email or phone number!", Toast.LENGTH_SHORT).show();
+                    showCustomToast("lease enter a valid email or phone number!", R.drawable.ic_uncheck);
                 }
 
                 if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
@@ -91,17 +96,18 @@ public class OPT_page extends AppCompatActivity {
                 }
                 else {
                     // Invalid input
-                    Toast.makeText(getApplicationContext(), "Please enter a valid email or phone number", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Please enter a valid email or phone number", R.drawable.ic_uncheck);
                 }
             }
         });
 
         //initially make the button disabled
         verifyBtn.setEnabled(false);
+        verifyBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), android.R.color.darker_gray));
+
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 verifyOtp(contactInput.getText().toString().trim(), otpInput.getText().toString().trim());
             }
         });
@@ -117,9 +123,11 @@ public class OPT_page extends AppCompatActivity {
                 int l = otpInput.getText().toString().trim().length();
                 if( l == 6 && contactExists[0] == true){
                     verifyBtn.setEnabled(true);
+                    verifyBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.deep_blue));
                 }
                 else if(l > 6 || l <6){
                     verifyBtn.setEnabled(false);
+                    verifyBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                 }
             }
 
@@ -134,10 +142,12 @@ public class OPT_page extends AppCompatActivity {
             public void onClick(View v) {
                 contactExists[0] = false;
                 verifyBtn.setEnabled(false);
+                verifyBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+
                 otpInput.setText("");
                 String contactInfo = contactInput.getText().toString().trim();
                 if(TextUtils.isEmpty(contactInfo)){
-                    Toast.makeText(OPT_page.this, "Please enter a valid email or phone number!", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Please enter a valid email or phone number!", R.drawable.ic_uncheck);
                 }
 
                 else if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
@@ -151,7 +161,7 @@ public class OPT_page extends AppCompatActivity {
                 }
                 else {
                     // Invalid input
-                    Toast.makeText(getApplicationContext(), "Please enter a valid email or phone number", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Please enter a valid email or phone number", R.drawable.ic_uncheck);
                 }
             }
         });
@@ -223,6 +233,9 @@ public class OPT_page extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        //making send code disabled
+                        sendcontactinfo.setEnabled(false);
+                        sendcontactinfo.setTextColor(getResources().getColor(android.R.color.darker_gray));
                         startResendCountdown();
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
                                 ContextCompat.checkSelfPermission(OPT_page.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
@@ -259,12 +272,23 @@ public class OPT_page extends AppCompatActivity {
                     public void onResponse(String response) {
                         if (response.trim().equalsIgnoreCase("true")) {
 
-                            // now allow the user to reset the password
-                            Intent change_password = new Intent(getApplicationContext(), ChangePassword.class);
-                            change_password.putExtra("contact_value", contactValue);
-                            startActivity(change_password);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Invalid or expired OTP.", Toast.LENGTH_SHORT).show();
+                            setContentView(R.layout.activity_success_screen);
+                            ImageView successImage = findViewById(R.id.success_image);
+                            successImage.setImageResource(R.drawable.ic_opt_check);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // now we are allowing the user to reset the password
+                                    Intent change_password = new Intent(getApplicationContext(), ChangePassword.class);
+                                    change_password.putExtra("contact_value", contactValue);
+                                    startActivity(change_password);                                }
+                            }, 2000);
+
+                        }
+
+                        else {
+                            showCustomToast("Invalid or expired OTP.", R.drawable.ic_uncheck);
                         }
                     }
                 },
@@ -304,7 +328,16 @@ public class OPT_page extends AppCompatActivity {
                 resendText.setEnabled(true);
                 resendText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
                 resendText.setText("Resend Code");
+                resendText.setAlpha(1f);
 
+                sendcontactinfo.setEnabled(true);
+                sendcontactinfo.setText("Send Code");
+                sendcontactinfo.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                sendcontactinfo.setTypeface(null, Typeface.BOLD);
+                sendcontactinfo.setAlpha(1f);
+
+                otpInput.setText("");
+                verifyBtn.setEnabled(false);
             }
 
         }.start();
@@ -344,6 +377,22 @@ public class OPT_page extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1001, builder.build());
+    }
+
+    private void showCustomToast(String message, int icon) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast, null);
+
+        TextView toastText = layout.findViewById(R.id.toast_text);
+        toastText.setText(message);
+
+        ImageView custom_icon = layout.findViewById(R.id.custom_icon);
+        custom_icon.setImageResource(icon);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.setGravity(Gravity.CENTER, 0, -100);
+        toast.show();
     }
 
 
