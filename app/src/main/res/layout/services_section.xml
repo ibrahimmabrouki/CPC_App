@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- SERVICES OVERLAY (on top of home layout) -->
+    <ScrollView
+        android:id="@+id/servicesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#CC011E40"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Our Services"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp" />
+
+            <!-- PUBLIC HEALTH -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/public_health_icon"
+                    android:contentDescription="Public Health" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Public Health"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/public_health_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- DENTISTRY -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/dentistry_icon"
+                    android:contentDescription="DENTISTRY" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DENTISTRY"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dentistry_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- ENT -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ent_icon"
+                    android:contentDescription="ENT" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ENT"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ent_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- Cardiology -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/cardiology_icon"
+                    android:contentDescription="Cardiology" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cardiology"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cardiology_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- Physical Therapy -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/physical_therapy_icon"
+                    android:contentDescription="Physical Therapy" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Physical Therapy"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/physical_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- Laboratory -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/laboratory_icon"
+                    android:contentDescription="Laboratory" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Laboratory"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/laboratory_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- Pharmacy -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_background_home_page"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/pharmacy_icon"
+                    android:contentDescription="Pharmacy" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pharmacy"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#011E40"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pharmacy_string"
+                    android:textColor="#333C57"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- BACK BUTTON -->
+            <Button
+                android:id="@+id/serviceBackBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back to Home"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_style"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

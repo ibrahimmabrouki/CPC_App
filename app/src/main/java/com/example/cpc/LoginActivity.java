@@ -2,13 +2,18 @@ package com.example.cpc;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +35,9 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     final String[] tag = {"Email"}; // Default contact value is the "Email"
-    TextView logintv3, logintv5, logintv6, logintv7,logintv8;
+    TextView logintv3, logintv5, logintv6, logintv7, logintv8;
     EditText login_ed_input, login_ed_password;
     Button loginbt;
-
 
 
     @Override
@@ -88,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!isValidPassword(login_ed_password.getText().toString().trim()) && login_ed_input.length() > 0){
+                if (!isValidPassword(login_ed_password.getText().toString().trim()) && login_ed_input.length() > 0) {
                     login_ed_password.setError("Invalid Password!");
                 }
             }
@@ -125,7 +129,8 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
 
@@ -153,19 +158,15 @@ public class LoginActivity extends AppCompatActivity {
                 String input = login_ed_input.getText().toString().trim();
                 String password = login_ed_password.getText().toString().trim();
 
-                if(!isValidEmail(input) && tag[0].equals("Email")){
+                if (!isValidEmail(input) && tag[0].equals("Email")) {
                     Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(!isValidPhone(input) && tag[0].equals("Phone")){
+                } else if (!isValidPhone(input) && tag[0].equals("Phone")) {
                     Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(!isValidPassword(password)){
+                } else if (!isValidPassword(password)) {
                     Toast.makeText(getApplicationContext(), "Invalid password", Toast.LENGTH_SHORT).show();
+                } else {
+                    loginUser(input, password);
                 }
-
-                else{loginUser(input, password);}
             }
         });
     }
@@ -196,34 +197,73 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if (response.contains("Success")) {
-                            String[] parts = response.split(":");
-                            String userType = parts.length > 1 ? parts[1] : "unknown";
+                            response = response.replace("Success:", "").trim();
 
-                            //Log.d("SERVER_RESPONSE", userType); used for debugging
+                            String userType = "";
+                            String userId = "";
 
-                            if (userType.equals("Doctor")) {  //put also id with the intent as an extra
-                                Toast.makeText(getApplicationContext(), "Logged in as Doctor", Toast.LENGTH_SHORT).show();
-                                // startActivity(new Intent(getApplicationContext(), DoctorDashboard.class));
+                            String[] parts = response.split(",");
+                            for (String part : parts) {
+                                if (part.contains("Type=")) {
+                                    userType = part.split("=")[1].trim();
+                                }
+                                else if (part.contains("ID=")) {
+                                    userId = part.split("=")[1].trim();
+                                }
                             }
-                            else if (userType.equals("Labratory")) {
-                                Toast.makeText(getApplicationContext(), "Logged in as Labratory", Toast.LENGTH_SHORT).show();
-                                // startActivity(new Intent(getApplicationContext(), LabDashboard.class));
-                            }
-                            else if (userType.equals("Pharmacist")) {
-                                Toast.makeText(getApplicationContext(), "Logged in as Pharmacist", Toast.LENGTH_SHORT).show();
-                                // startActivity(new Intent(getApplicationContext(), PharmacyDashboard.class));
+
+                            Log.d("LOGIN_DEBUG", "User ID: " + userId);
+                            Log.d("LOGIN_DEBUG", "Type: " + userType);
+
+
+                            setContentView(R.layout.activity_success_screen);
+
+                            ImageView successImage = findViewById(R.id.success_image);
+
+                            Intent intent = null;
+
+                            if (userType.equals("Doctor")) {
+                                successImage.setImageResource(R.drawable.doctor_toast_bg);
+                                showCustomToast("Logged in as Doctor");
+                                intent = new Intent(getApplicationContext(), DoctorActivity.class);
+
                             }
                             else if (userType.equals("Patient")) {
-                                Toast.makeText(getApplicationContext(), "Logged in as Patient", Toast.LENGTH_SHORT).show();
-                                // startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                                successImage.setImageResource(R.drawable.patien_toast_bg);
+                                //showCustomToast("Logged in as Patient");
+                                //intent = new Intent(getApplicationContext(), PatientDashboard.class);
+
                             }
-                            else {
+                            else if (userType.equals("Pharmacist")) {
+                                successImage.setImageResource(R.drawable.pharmacist_toast_bg);
+                                //showCustomToast("Logged in as Pharmacist");
+                              //  intent = new Intent(getApplicationContext(), PharmacyDashboard.class);
+
+                            }
+                            else if (userType.equals("Labratory")) {
+                                successImage.setImageResource(R.drawable.labratory_toast_bg);
+                                //showCustomToast("Logged in as Laboratory");
+                               // intent = new Intent(getApplicationContext(), LabDashboard.class);
+
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Unknown user type: " + userType, Toast.LENGTH_SHORT).show();
+                                return;
                             }
 
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "login failed", Toast.LENGTH_SHORT).show();
+                            final Intent finalIntent = intent;
+                            final String finalUserId = userId;
+
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finalIntent.putExtra("user_id", finalUserId);
+                                    startActivity(finalIntent);
+                                    finish();
+                                }
+                            }, 2000);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -245,4 +285,21 @@ public class LoginActivity extends AppCompatActivity {
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
+    private void showCustomToast(String message) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast, null);
+
+        TextView toastText = layout.findViewById(R.id.toast_text);
+        toastText.setText(message);
+
+        ImageView custom_icon = layout.findViewById(R.id.custom_icon);
+        custom_icon.setImageResource(R.drawable.ic_check);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.setGravity(Gravity.CENTER, 0, -100);
+        toast.show();
+    }
+
 }

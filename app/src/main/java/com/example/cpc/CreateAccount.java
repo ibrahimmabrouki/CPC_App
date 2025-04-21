@@ -4,13 +4,18 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -227,22 +232,22 @@ public class CreateAccount extends AppCompatActivity {
 
                         // Validate inputs
                         if (!isValidUsername(username)) {
-                            Toast.makeText(CreateAccount.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                            showCustomToast("Invalid username", R.drawable.ic_uncheck);
                             return;
                         }
 
                         if (!isValidPassword(password)) {
-                            Toast.makeText(CreateAccount.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                            showCustomToast("Invalid password", R.drawable.ic_uncheck);
                             return;
                         }
 
                         if (type.equals("Email") && !isValidEmail(input)) {
-                            Toast.makeText(CreateAccount.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                            showCustomToast("Invalid email address", R.drawable.ic_uncheck);
                             return;
                         }
 
                         if (type.equals("Phone") && !isValidPhone(input)) {
-                            Toast.makeText(CreateAccount.this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+                            showCustomToast("Invalid phone number", R.drawable.ic_uncheck);
                             return;
                         }
 
@@ -326,10 +331,23 @@ public class CreateAccount extends AppCompatActivity {
                         // Handle the response from the server
                         //Log.d("SERVER_RESPONSE", response); used for debugging
                         if (response.contains("Success")) {
-                            Toast.makeText(getApplicationContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Registration failed", Toast.LENGTH_SHORT).show();
+
+                            setContentView(R.layout.activity_success_screen);
+                            ImageView successImage = findViewById(R.id.success_image);
+                            successImage.setImageResource(R.drawable.patien_toast_bg);
+
+                            showCustomToast("User registered successfully", R.drawable.ic_check);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                }
+                            }, 2000);
+                        }
+
+                        else {
+                            showCustomToast("Registration failed", R.drawable.ic_uncheck);
                         }
                     }
                 },
@@ -439,7 +457,20 @@ public class CreateAccount extends AppCompatActivity {
         void onResult(boolean isAvailable);
     }
 
+    private void showCustomToast(String message, int icon) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast, null);
 
+        TextView toastText = layout.findViewById(R.id.toast_text);
+        toastText.setText(message);
 
+        ImageView custom_icon = layout.findViewById(R.id.custom_icon);
+        custom_icon.setImageResource(icon);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.setGravity(Gravity.CENTER, 0, -100);
+        toast.show();
+    }
 
 }

@@ -5,122 +5,137 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OPT_page"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="#F9F9F9"
+    tools:context=".OPT_page">
+
     <!-- Title -->
 
     <!-- Instruction -->
+
+    <!-- Contact Input -->
     <TextView
         android:id="@+id/otpTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.01"
         android:text="Reset Password"
-        android:textColor="#000000"
-        android:textSize="24sp"
+        android:textColor="#002366"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.066" />
-
-
-    <EditText
-        android:id="@+id/contactInput"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:background="#EEEEEE"
-        android:hint="Email or Phone Number"
-        android:inputType="text"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.146" />
 
     <TextView
         android:id="@+id/otpInstruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Enter the 6-digit code sent to your phone/email"
+        android:fontFamily="sans-serif"
+        android:text="📩 Enter the 6-digit code sent to your phone/email"
         android:textColor="#666666"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/otpTitle"
-        app:layout_constraintVertical_bias="0.268" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.343" />
 
     <EditText
-        android:id="@+id/otpInput"
+        android:id="@+id/contactInput"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:background="#EEEEEE"
-        android:gravity="center"
-        android:hint="Enter OTP"
-        android:inputType="number"
-        android:maxLength="6"
-        android:padding="10dp"
+        android:background="@drawable/clickable_tab"
+        android:hint="Email or Phone Number"
+        android:inputType="text"
+        android:padding="16dp"
         android:textColor="#000000"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.435" />
-
-    <Button
-        android:id="@+id/verifyBtn"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
-        android:background="#6200EE"
-        android:text="Verify"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColorHint="#999999"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.558" />
-
-    <TextView
-        android:id="@+id/resendText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
-        android:text="Didn’t receive the code? Resend in 5 min"
-        android:textColor="#007BFF"
-        android:textSize="14sp"
+        android:fontFamily="sans-serif"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.554" />
+        app:layout_constraintVertical_bias="0.146" />
 
+    <!-- Send Code -->
     <TextView
         android:id="@+id/sendcontactinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send Code"
+        android:textColor="#FF5722"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.465"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.284" />
+
+    <!-- OTP Input -->
+    <EditText
+        android:id="@+id/otpInput"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/clickable_tab"
+        android:gravity="center"
+        android:hint="Enter OTP"
+        android:inputType="number"
+        android:maxLength="6"
+        android:padding="16dp"
+        android:textColor="#000000"
+        android:textColorHint="#999999"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.435" />
+
+    <!-- Verify Button -->
+    <Button
+        android:id="@+id/verifyBtn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#002366"
+        android:text="Verify"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.558" />
+
+    <!-- Resend Text -->
+    <TextView
+        android:id="@+id/resendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="164dp"
+        android:text="Didn’t receive the code? ⏱️ Resend in 5 min"
+        android:textColor="#007BFF"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.554" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,5 +16,6 @@
     <color name="green">#4CAF50</color>
     <color name="app_bar_color">#010C80</color>
     <color name="red">#F44336</color>
+    <color name="deep_blue">#002366</color>
     <color name="gray_dark">#A9A9A9</color>
 </resources>

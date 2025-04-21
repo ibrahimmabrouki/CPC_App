@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9F9F9"
     tools:context=".CreateAccount">
 
     <!-- Title -->
@@ -13,9 +14,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create An Account"
-        android:textSize="24sp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="#002366"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.457"
@@ -23,68 +26,84 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.022" />
 
-    <!-- Email Label -->
-    <TextView
-        android:id="@+id/createtv_email_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email Address"
-        android:textSize="16sp"
-        android:textColor="#555555"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.193" />
+    <!-- Email Label as clickable tab -->
 
-    <!-- Phone Label -->
+    <!-- Phone Label as clickable tab -->
 
     <!-- Username Input -->
+    <TextView
+        android:id="@+id/createtv_email_address"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:background="@drawable/clickable_tab"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="88dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="Email Address"
+        android:textColor="#002366"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.864"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.239" />
 
     <TextView
         android:id="@+id/createtv_phone_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:background="@drawable/clickable_tab"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="88dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:text="Phone Number"
-        android:textColor="#555555"
+        android:textColor="#002366"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.413"
+        app:layout_constraintHorizontal_bias="0.131"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.239" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/username_card_signup"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/createtv1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.077">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
             android:id="@+id/create_ed_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:hint="Enter A Valid Username"
             android:padding="16dp"
             android:textColor="#000000"
-            android:textColorHint="#888888"
-            android:background="@android:color/transparent" />
+            android:textColorHint="#888888" />
     </androidx.cardview.widget.CardView>
 
     <!-- Email Input -->
     <androidx.cardview.widget.CardView
         android:id="@+id/email_card_signup"
-        android:layout_width="414dp"
+        android:layout_width="0dp"
         android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +111,7 @@
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232">
+        app:layout_constraintVertical_bias="0.33">
 
         <EditText
             android:id="@+id/create_ed_input_cred"
@@ -109,8 +128,9 @@
     <!-- Password Input -->
     <androidx.cardview.widget.CardView
         android:id="@+id/password_card_signup"
-        android:layout_width="411dp"
-        android:layout_height="51dp"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -118,25 +138,26 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.389">
+        app:layout_constraintVertical_bias="0.41">
 
         <EditText
             android:id="@+id/create_ed_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:hint="Enter a valid password"
+            android:inputType="textPassword"
             android:padding="16dp"
             android:textColor="#000000"
-            android:textColorHint="#888888"
-            android:inputType="textPassword"
-            android:background="@android:color/transparent" />
+            android:textColorHint="#888888" />
     </androidx.cardview.widget.CardView>
 
     <!-- Confirm Password Input -->
     <androidx.cardview.widget.CardView
         android:id="@+id/confirm_password_card"
-        android:layout_width="409dp"
-        android:layout_height="55dp"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -144,7 +165,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.554">
+        app:layout_constraintVertical_bias="0.58">
 
         <EditText
             android:id="@+id/create_ed_confirm"
@@ -158,29 +179,34 @@
             android:background="@android:color/transparent" />
     </androidx.cardview.widget.CardView>
 
+    <!-- Sign Up Button -->
 
-    <!-- Already Have an Account -->
-
+    <!-- Already have an account -->
     <Button
         android:id="@+id/btsignunp"
-        android:layout_width="223dp"
-        android:layout_height="53dp"
-        android:backgroundTint="#FF5722"
-        android:text="Sign up"
+        android:layout_width="206dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#002366"
+        android:elevation="4dp"
+        android:text="Sign Up"
         android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.719" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <TextView
         android:id="@+id/createtv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account?"
+        android:text="Already have an account? 👋"
         android:textColor="#555555"
-        android:textSize="14sp"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.206"
@@ -192,13 +218,14 @@
         android:id="@+id/createtv_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
         android:text="Sign in here"
         android:textColor="#FF5722"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.719"
+        app:layout_constraintHorizontal_bias="0.752"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.862" />

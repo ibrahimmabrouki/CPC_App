@@ -1,441 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#011E40"
     tools:context=".Home_page">
 
-    <!-- HOME LAYOUT inside ScrollView (base layer) -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:padding="16dp">
 
         <LinearLayout
             android:id="@+id/homeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
             android:gravity="center_horizontal">
 
-            <!-- Logo + Buttons Row -->
+            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingBottom="12dp"
-                android:background="@android:color/transparent">
+                android:paddingBottom="16dp">
 
-                <!-- Logo Block -->
-                <LinearLayout
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_clinic_logo"
+                    app:tint="@android:color/white"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Clinic Logo" />
+
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="6dp"
-                    android:background="@drawable/logo_background"
-                    android:gravity="center">
+                    android:text="CARE POINT\nCLINIC"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="2dp" />
 
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@drawable/icon"
-                        android:contentDescription="CPC Logo" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Care Point Clinic"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
-                </LinearLayout>
-
-                <!-- Right-side Buttons -->
-                <LinearLayout
+                <Button
+                    android:id="@+id/homepage_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="8dp">
-
-                    <Button
-                        android:id="@+id/make_appointment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/button_style"
-                        android:text="Make Appointment"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:id="@+id/homepage_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_style"
-                        android:text="Login"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                    android:text="LOG IN"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:backgroundTint="#1B3B6F" />
             </LinearLayout>
 
-            <!-- 2x2 Navigation Grid -->
-            <GridLayout
-                android:id="@+id/gridLayout"
+            <!-- Navigation -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:useDefaultMargins="true"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/transparent">
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
 
                 <Button
                     android:id="@+id/view_doctors"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:background="@drawable/button_style"
-                    android:text="Doctors"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:layout_height="138dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#153558"
+                    android:drawableTop="@drawable/ic_doctor"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="DOCTORS"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/view_services"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:background="@drawable/button_style"
-                    android:text="Services"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:layout_height="138dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#153558"
+                    android:drawableTop="@drawable/ic_services"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="SERVICES"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/view_contact"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_columnWeight="1"
-                    android:background="@drawable/button_style"
-                    android:text="Contact"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-            </GridLayout>
+                    android:layout_height="138dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#153558"
+                    android:drawableTop="@drawable/ic_contact"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="CONTACT"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <!-- Doctors Image -->
-            <ImageView
+            <!-- Hero Section -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="24dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/doctor_home"
-                android:contentDescription="Doctors" />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_height="240dp"
+                android:layout_marginBottom="16dp">
 
-    <!-- SERVICES OVERLAY (on top of home layout) -->
-    <ScrollView
-        android:id="@+id/servicesLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="#CC011E40"
-        android:padding="16dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp"
+                    android:contentDescription="Hero Image"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/doctor_home" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="154dp"
+                    android:layout_height="66dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="24dp"
+                    android:lineSpacingExtra="6dp"
+                    android:text="Your Health is\nOur Priority"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Our Services"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="24dp" />
-
-            <!-- PUBLIC HEALTH -->
+            <!-- Quick Access -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/public_health_icon"
-                    android:contentDescription="Public Health" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Public Health"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/public_health_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- DENTISTRY -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/dentistry_icon"
-                    android:contentDescription="DENTISTRY" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DENTISTRY"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dentistry_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- ENT -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ent_icon"
-                    android:contentDescription="ENT" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ENT"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ent_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- Cardiology -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/cardiology_icon"
-                    android:contentDescription="Cardiology" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cardiology"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cardiology_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- Physical Therapy -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/physical_therapy_icon"
-                    android:contentDescription="Physical Therapy" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Physical Therapy"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/physical_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- Laboratory -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/laboratory_icon"
-                    android:contentDescription="Laboratory" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Laboratory"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/laboratory_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- Pharmacy -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background_home_page"
-                android:elevation="4dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/pharmacy_icon"
-                    android:contentDescription="Pharmacy" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pharmacy"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#011E40"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pharmacy_string"
-                    android:textColor="#333C57"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-
-            <!-- BACK BUTTON -->
-            <Button
-                android:id="@+id/backToHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back to Home"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/button_style"
-                android:textColor="@android:color/white" />
+                android:paddingHorizontal="8dp">
+
+                <Button
+                    android:id="@+id/make_appointment"
+                    android:layout_width="0dp"
+                    android:layout_height="165dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#1A4566"
+                    android:drawableTop="@drawable/ic_appointments"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="12dp"
+                    android:text="MY\nAPPOINTMENTS"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnMyRecords"
+                    android:layout_width="0dp"
+                    android:layout_height="165dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#1A4566"
+                    android:drawableTop="@drawable/ic_records"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:padding="12dp"
+                    android:text="MY\nRECORDS"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </FrameLayout>
