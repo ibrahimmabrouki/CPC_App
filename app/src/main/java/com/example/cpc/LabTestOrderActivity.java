@@ -19,6 +19,7 @@ public class LabTestOrderActivity extends AppCompatActivity {
     EditText etPatientId, etTestName, etReason, etInstructions;
     final String BASE_URL = "http://10.21.148.28/clinic";
     int doctorId;
+    int appointmentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class LabTestOrderActivity extends AppCompatActivity {
 
         String passedId = getIntent().getStringExtra("patient_id");
         doctorId = getIntent().getIntExtra("doctor_id", 7);
+        appointmentId = getIntent().getIntExtra("appointment_id", 0);
 
         if (passedId != null && !passedId.isEmpty()) {
             etPatientId.setText(passedId);
@@ -73,6 +75,7 @@ public class LabTestOrderActivity extends AppCompatActivity {
                 params.put("test_name", testName);
                 params.put("reason", reason);
                 params.put("instructions", instructions);
+                params.put("appointment_id", String.valueOf(appointmentId));
                 return params;
             }
         };

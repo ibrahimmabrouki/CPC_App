@@ -54,9 +54,11 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         holder.nameId.setText(patient.name + " (ID: " + patient.id + ")");
         holder.reason.setText("Reason: " + patient.reason);
 
-        holder.btnView.setOnClickListener(v ->
-                Toast.makeText(context, "Viewing record of " + patient.name, Toast.LENGTH_SHORT).show()
-        );
+        holder.btnView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, RecordDetailActivity.class);
+            intent.putExtra("appointment_id", patient.appointmentId);
+            context.startActivity(intent);
+        });
 
         holder.btnGenerate.setOnClickListener(v -> {
             if (activePopup != null) activePopup.dismiss();
@@ -73,6 +75,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
                     Intent prescriptionIntent = new Intent(context, PrescriptionActivity.class);
                     prescriptionIntent.putExtra("patient_id", patient.id);
                     prescriptionIntent.putExtra("doctor_id", doctorId);
+                    prescriptionIntent.putExtra("appointment_id", patient.appointmentId);
                     context.startActivity(prescriptionIntent);
                     return true;
 
@@ -80,6 +83,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
                     Intent medicalIntent = new Intent(context, MedicalRecordActivity.class);
                     medicalIntent.putExtra("patient_id", patient.id);
                     medicalIntent.putExtra("doctor_id", doctorId);
+                    medicalIntent.putExtra("appointment_id", patient.appointmentId);
                     context.startActivity(medicalIntent);
                     return true;
 
@@ -87,6 +91,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
                     Intent labIntent = new Intent(context, LabTestOrderActivity.class);
                     labIntent.putExtra("patient_id", patient.id);
                     labIntent.putExtra("doctor_id", doctorId);
+                    labIntent.putExtra("appointment_id", patient.appointmentId);
                     context.startActivity(labIntent);
                     return true;
                 }

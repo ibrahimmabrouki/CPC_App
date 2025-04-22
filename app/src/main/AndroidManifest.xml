@@ -21,6 +21,7 @@
             android:exported="false" />
         <activity android:name=".PharmacistActivity" />
         <activity android:name=".PrescriptionDetailActivity" />
+        <activity android:name=".RecordDetailActivity" />
         <activity
             android:name=".Home_page"
             android:exported="false" />
