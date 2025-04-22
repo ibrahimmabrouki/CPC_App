@@ -7,17 +7,15 @@
     android:background="@color/light_gray"
     android:padding="16dp">
 
-    <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Schedule"
+        android:text="Weekly Schedule"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/primary_dark"
         android:layout_marginBottom="12dp" />
 
-    <!-- Day Tabs -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +69,6 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <!-- Appointment List -->
     <LinearLayout
         android:id="@+id/schedule_container"
         android:layout_width="match_parent"

@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loginUser(String input, String password) {
-        String url = "http://10.21.148.28/testfyp/login.php";
+        String url = "http://10.21.148.28/clinic/login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -263,7 +263,7 @@ public class LoginActivity extends AppCompatActivity {
                             }, 2000);
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },

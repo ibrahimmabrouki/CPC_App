@@ -188,7 +188,7 @@ public class OPT_page extends AppCompatActivity {
     }
 
     private void checkIfContactExists(String contactValue) {
-        String url = "http://10.21.148.28/testfyp/check_contact.php";
+        String url = "http://10.21.148.28/clinic/check_contact.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -227,7 +227,7 @@ public class OPT_page extends AppCompatActivity {
     }
 
     private void requestOtp(String contactValue) {
-        String url = "http://10.0.2.2/testfyp/send_otp.php";
+        String url = "http://10.0.2.2/clinic/send_otp.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -264,7 +264,7 @@ public class OPT_page extends AppCompatActivity {
     }
 
     private void verifyOtp(String contactValue, String otpCode) {
-        String url = "http://10.0.2.2/testfyp/ResetPassword/verify_otp.php";
+        String url = "http://10.0.2.2/clinic/ResetPassword/verify_otp.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
