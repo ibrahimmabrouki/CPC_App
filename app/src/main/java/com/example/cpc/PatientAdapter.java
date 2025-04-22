@@ -120,6 +120,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
                     Map<String, String> params = new HashMap<>();
                     params.put("doctor_id", String.valueOf(doctorId));
                     params.put("patient_id", patient.id);
+                    params.put("appointment_id", String.valueOf(patient.appointmentId));
                     return params;
                 }
             };

@@ -69,7 +69,7 @@ public class PrescriptionActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("patient_id", patientId);
-                params.put("doctor_id", doctorId); // ✅ dynamic doctor ID sent
+                params.put("doctor_id", doctorId);
                 params.put("medication", medication);
                 params.put("dosage", dosage);
                 params.put("instructions", instructions);

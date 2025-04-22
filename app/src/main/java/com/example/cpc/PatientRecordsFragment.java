@@ -62,7 +62,8 @@ public class PatientRecordsFragment extends Fragment implements RefreshableFragm
                             String name = obj.getString("name");
                             String id = obj.getString("id");
                             String reason = obj.getString("reason");
-                            patients.add(new Patient(name, id, reason));
+                            int appointmentId = obj.getInt("appointment_id");
+                            patients.add(new Patient(name, id, reason, appointmentId));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
