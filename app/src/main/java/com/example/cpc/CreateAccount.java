@@ -76,8 +76,7 @@ public class CreateAccount extends AppCompatActivity {
 
                 if (!username.isEmpty()) {
                     if (!isValidUsername(username)) {
-                        create_ed_username.setError("Invalid username!");
-                    }
+                        create_ed_username.setError("Invalid username!");}
                     else {
                         checkUsernameAvailability(username, new UsernameCheckCallback() {
                             @Override

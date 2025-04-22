@@ -82,10 +82,10 @@ public class OPT_page extends AppCompatActivity {
             public void onClick(View v) {
                 String contactInfo = contactInput.getText().toString().trim();
                 if(TextUtils.isEmpty(contactInfo)){
-                    showCustomToast("lease enter a valid email or phone number!", R.drawable.ic_uncheck);
+                    showCustomToast("Please enter a valid email or phone number!", R.drawable.ic_uncheck);
                 }
 
-                if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
+                else if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
                     //Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
                 }

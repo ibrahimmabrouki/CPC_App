@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -24,9 +25,10 @@ import androidx.core.view.WindowInsetsCompat;
 public class Home_page extends AppCompatActivity {
 
     Button make_appointment, homepage_login, view_doctors, view_services, view_contact;
-    Button contactBackBtn, serviceBackBtn, btnMyRecords;
-    LinearLayout homeLayout, contact_layout;
+    Button contactBackBtn, serviceBackBtn, btnMyRecords, doctorBackBtn;
+    LinearLayout homeLayout, contact_layout, doctorlayout;
     ScrollView service_layout;
+    ListView doctors_lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,16 @@ public class Home_page extends AppCompatActivity {
         service_layout = serviceView.findViewById(R.id.servicesLayout);
         serviceBackBtn = serviceView.findViewById(R.id.serviceBackBtn);
 
+        //Inflate services section into the main layout
+        View doctorView = getLayoutInflater().inflate(R.layout.doctor_section, (ViewGroup) findViewById(R.id.main), false);
+        ((ViewGroup) findViewById(R.id.main)).addView(doctorView);
+        doctorlayout = doctorView.findViewById(R.id.doctorLayout);
+        doctorBackBtn = doctorView.findViewById(R.id.doctorBackBtn);
+        doctors_lv = doctorView.findViewById(R.id.doctors_lv);
+
+
+
+
         // Open login screen
         make_appointment.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -109,6 +121,22 @@ public class Home_page extends AppCompatActivity {
         // Back from services section
         serviceBackBtn.setOnClickListener(v -> {
             service_layout.setVisibility(View.GONE);
+            homeLayout.setVisibility(View.VISIBLE);
+        });
+
+        // Show doctors section
+        view_doctors.setOnClickListener(v -> {
+            doctorlayout.setVisibility(View.VISIBLE);
+            homeLayout.setVisibility(View.GONE);
+
+            String Doctors_name[] = {"ibrahim", "abd", "ali"};
+            DoctorCustomeAdapter doctor_info = new DoctorCustomeAdapter(this, Doctors_name);
+            doctors_lv.setAdapter(doctor_info);
+        });
+
+        // Back from doctors section
+        doctorBackBtn.setOnClickListener(v -> {
+            doctorlayout.setVisibility(View.GONE);
             homeLayout.setVisibility(View.VISIBLE);
         });
 

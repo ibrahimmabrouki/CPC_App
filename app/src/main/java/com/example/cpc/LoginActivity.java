@@ -212,14 +212,12 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
 
-                            Log.d("LOGIN_DEBUG", "User ID: " + userId);
-                            Log.d("LOGIN_DEBUG", "Type: " + userType);
+                            //Log.d("LOGIN_DEBUG", "User ID: " + userId);
+                            //Log.d("LOGIN_DEBUG", "Type: " + userType);
 
 
                             setContentView(R.layout.activity_success_screen);
-
                             ImageView successImage = findViewById(R.id.success_image);
-
                             Intent intent = null;
 
                             if (userType.equals("Doctor")) {
@@ -262,7 +260,9 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }, 2000);
 
-                        } else {
+                        }
+
+                        else {
                             Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
                         }
                     }
