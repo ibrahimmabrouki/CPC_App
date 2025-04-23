@@ -22,6 +22,10 @@
         <activity android:name=".PharmacistActivity" />
         <activity android:name=".PrescriptionDetailActivity" />
         <activity android:name=".RecordDetailActivity" />
+        <activity android:name=".LabTechnicianActivity" />
+        <activity android:name=".LabTestDetailActivity" />
+        <activity android:name=".ViewGeneratedResultActivity" />
+        <activity android:name=".GenerateLabResultActivity" />
         <activity
             android:name=".Home_page"
             android:exported="false" />

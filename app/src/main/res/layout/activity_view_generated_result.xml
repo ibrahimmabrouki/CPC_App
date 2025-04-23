@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:padding="24dp"
+        android:elevation="4dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generated Lab Test Result"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvResultContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textSize="18sp"
+            android:textColor="@color/gray_dark"
+            android:lineSpacingExtra="8dp"
+            android:textAlignment="center"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnEditResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Result"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/blue"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

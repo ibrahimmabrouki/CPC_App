@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/card_background"
+    android:padding="16dp"
+    android:elevation="4dp"
+    android:layout_marginBottom="12dp">
+
+    <TextView
+        android:id="@+id/tvTestOrderId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Test Order ID"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_dark" />
+
+    <Button
+        android:id="@+id/btnViewOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Record"
+        android:backgroundTint="@color/blue"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

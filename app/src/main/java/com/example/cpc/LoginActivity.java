@@ -242,8 +242,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if (userType.equals("Labratory")) {
                                 successImage.setImageResource(R.drawable.labratory_toast_bg);
-                                //showCustomToast("Logged in as Laboratory");
-                               // intent = new Intent(getApplicationContext(), LabDashboard.class);
+                                showCustomToast("Logged in as Laboratory");
+                                intent = new Intent(getApplicationContext(), LabTechnicianActivity.class);
 
                             } else {
                                 Toast.makeText(getApplicationContext(), "Unknown user type: " + userType, Toast.LENGTH_SHORT).show();
