@@ -32,7 +32,7 @@ import java.util.Random;
 public class LabTechnicianActivity extends AppCompatActivity {
 
     private final String BASE_URL = "http://10.21.148.28/clinic";
-    private String currentUserId = "9";
+    private String currentUserId = "";
     private Handler pollingHandler;
     private Runnable pollingRunnable;
 
@@ -41,7 +41,7 @@ public class LabTechnicianActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lab_technician);
 
-        //currentUserId = getIntent().getStringExtra("user_id");
+        currentUserId = getIntent().getStringExtra("user_id");
 
         if (savedInstanceState == null) {
             Fragment defaultFragment = new LabTechnicianOverviewFragment();
