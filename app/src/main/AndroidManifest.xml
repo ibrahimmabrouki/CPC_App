@@ -16,6 +16,11 @@
         android:theme="@style/Theme.CPC"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".PatientHomePageActivity"
+            android:exported="false"
+            android:label="CPC" />
         <activity
             android:name=".PrescriptionActivity"
             android:exported="false" />

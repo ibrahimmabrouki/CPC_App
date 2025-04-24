@@ -54,6 +54,8 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, Home_page.class));
             //startActivity(new Intent(SplashActivity.this, CreateAccount.class));
             //startActivity(new Intent(SplashActivity.this, ChangePassword.class));
+           //startActivity(new Intent(SplashActivity.this, PatientHomePageActivity.class));
+
 
 
 

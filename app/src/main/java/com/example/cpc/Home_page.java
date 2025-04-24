@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -21,12 +22,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Home_page extends AppCompatActivity {
 
     Button make_appointment, homepage_login, view_doctors, view_services, view_contact;
-    Button contactBackBtn, serviceBackBtn, btnMyRecords;
-    LinearLayout homeLayout, contact_layout;
+    Button contactBackBtn, serviceBackBtn, btnMyRecords, doctorBackBtn;
+    LinearLayout homeLayout, contact_layout, doctorlayout;
     ScrollView service_layout;
+    ListView doctors_lv;
+
+    private List<String> doctorsList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +88,16 @@ public class Home_page extends AppCompatActivity {
         service_layout = serviceView.findViewById(R.id.servicesLayout);
         serviceBackBtn = serviceView.findViewById(R.id.serviceBackBtn);
 
+        //Inflate services section into the main layout
+        View doctorView = getLayoutInflater().inflate(R.layout.doctor_section, (ViewGroup) findViewById(R.id.main), false);
+        ((ViewGroup) findViewById(R.id.main)).addView(doctorView);
+        doctorlayout = doctorView.findViewById(R.id.doctorLayout);
+        doctorBackBtn = doctorView.findViewById(R.id.doctorBackBtn);
+        doctors_lv = doctorView.findViewById(R.id.doctors_lv);
+
+
+
+
         // Open login screen
         make_appointment.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -112,6 +140,19 @@ public class Home_page extends AppCompatActivity {
             homeLayout.setVisibility(View.VISIBLE);
         });
 
+        // Show doctors section
+        view_doctors.setOnClickListener(v -> {
+            doctorlayout.setVisibility(View.VISIBLE);
+            homeLayout.setVisibility(View.GONE);
+            getDoctorsFromServer();
+        });
+
+        // Back from doctors section
+        doctorBackBtn.setOnClickListener(v -> {
+            doctorlayout.setVisibility(View.GONE);
+            homeLayout.setVisibility(View.VISIBLE);
+        });
+
         // Open dialer
         phoneCard.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -136,4 +177,46 @@ public class Home_page extends AppCompatActivity {
             }
         }
     }
+    private void getDoctorsFromServer() {
+        String url = "http://10.0.2.2/testfyp/get_doctors.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            // Clear any previous data in the list
+                            doctorsList.clear();
+
+                            // Process each doctor's name in the JSON array
+                            for (int i = 0; i < response.length(); i++) {
+                                String doctorName = response.getString(i);
+                                // Add doctor name to the list
+                                doctorsList.add(doctorName);
+                            }
+
+                            DoctorCustomeAdapter doctor_info = new DoctorCustomeAdapter(getApplicationContext(), doctorsList);
+                            doctors_lv.setAdapter(doctor_info);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Parsing error!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle network errors
+                        Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Add the request to the queue
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
 }

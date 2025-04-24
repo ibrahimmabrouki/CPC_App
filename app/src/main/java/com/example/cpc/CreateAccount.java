@@ -76,8 +76,7 @@ public class CreateAccount extends AppCompatActivity {
 
                 if (!username.isEmpty()) {
                     if (!isValidUsername(username)) {
-                        create_ed_username.setError("Invalid username!");
-                    }
+                        create_ed_username.setError("Invalid username!");}
                     else {
                         checkUsernameAvailability(username, new UsernameCheckCallback() {
                             @Override
@@ -365,6 +364,7 @@ public class CreateAccount extends AppCompatActivity {
                 params.put("password", password);
                 params.put("contact_type", type);
                 params.put("contact_value", input);
+                //params.put("type", "Patient");
                 return params;
             }
         };

@@ -1,6 +1,7 @@
 package com.example.cpc;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -212,14 +213,17 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
 
-                            Log.d("LOGIN_DEBUG", "User ID: " + userId);
-                            Log.d("LOGIN_DEBUG", "Type: " + userType);
+                            //Log.d("LOGIN_DEBUG", "User ID: " + userId);
+                            //Log.d("LOGIN_DEBUG", "Type: " + userType);
 
+                            // Save the user ID in SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user_id", userId);
+                            editor.apply();
 
                             setContentView(R.layout.activity_success_screen);
-
                             ImageView successImage = findViewById(R.id.success_image);
-
                             Intent intent = null;
 
                             if (userType.equals("Doctor")) {
@@ -230,8 +234,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if (userType.equals("Patient")) {
                                 successImage.setImageResource(R.drawable.patien_toast_bg);
-                                //showCustomToast("Logged in as Patient");
-                                //intent = new Intent(getApplicationContext(), PatientDashboard.class);
+                                showCustomToast("Logged in as Patient");
+                                intent = new Intent(getApplicationContext(), PatientHomePageActivity.class);
 
                             }
                             else if (userType.equals("Pharmacist")) {
