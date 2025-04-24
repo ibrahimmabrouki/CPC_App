@@ -168,7 +168,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="#1A4566"
-                    android:drawableTop="@drawable/ic_records"
+                    android:drawableTop="@drawable/ic_records1"
                     android:drawablePadding="8dp"
                     android:gravity="center"
                     android:lineSpacingExtra="4dp"

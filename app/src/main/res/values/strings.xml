@@ -17,5 +17,8 @@
     <string name="cardiology_string">Mental wellness is integral to overall health, and at the Cardiology Clinic, we prioritize your well-being in every aspect. </string>
     <string name="laboratory_string">Mental wellness is a vital component of overall health, and our Laboratory Services are committed to supporting your journey towards well-being.</string>
     <string name="pharmacy_string">Beyond prescriptions, our Pharmacy is dedicated to supporting your holistic health, including mental well-being. </string>
+    <string name="title_activity_patient_home_page">PatientHomePageActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

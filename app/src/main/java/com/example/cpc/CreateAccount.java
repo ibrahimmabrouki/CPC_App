@@ -364,6 +364,7 @@ public class CreateAccount extends AppCompatActivity {
                 params.put("password", password);
                 params.put("contact_type", type);
                 params.put("contact_value", input);
+                //params.put("type", "Patient");
                 return params;
             }
         };

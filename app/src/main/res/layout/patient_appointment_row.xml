@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/item_patient_appointment_bg"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- Doctor's Name -->
+    <TextView
+        android:id="@+id/doctorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ibrahim Mabrouki"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
+
+    <!-- Appointment Reason -->
+    <TextView
+        android:id="@+id/appointmentReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Follow-up Consultation"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Appointment Date -->
+    <TextView
+        android:id="@+id/appointmentDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2025-04-24"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Appointment Time -->
+    <TextView
+        android:id="@+id/appointmentTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10:30 AM"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Follow Up Button -->
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="376dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/blue"
+        android:text="Cancel Appointment"
+        android:textColor="@android:color/white" />
+</LinearLayout>

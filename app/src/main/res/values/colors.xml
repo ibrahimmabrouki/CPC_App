@@ -17,4 +17,5 @@
     <color name="app_bar_color">#010C80</color>
     <color name="red">#F44336</color>
     <color name="deep_blue">#002366</color>
+    <color name="secondary_text">#8A000000</color>
 </resources>

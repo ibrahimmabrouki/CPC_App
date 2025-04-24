@@ -13,11 +13,17 @@
 
     <!-- Optional overlays -->
     <style name="Theme.CPC.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.CPC.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Splash theme -->
     <style name="Theme.CPC.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/splash_background</item>
+    </style>
+
+    <style name="Theme.CPC.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

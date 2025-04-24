@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/doctorLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,19 +10,15 @@
     android:background="@drawable/contact_section_background"
     android:visibility="gone">
 
+    <!-- Row layout for holding the ListView -->
     <LinearLayout
         android:id="@+id/rowLayout"
-        android:layout_width="409dp"
-        android:layout_height="618dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/contact_section_background"
-        app:layout_constraintVertical_bias="0.0">
+        android:background="@drawable/contact_section_background">
 
+        <!-- ListView for displaying the doctor names -->
         <ListView
             android:id="@+id/doctors_lv"
             android:layout_width="match_parent"
@@ -31,19 +26,18 @@
             android:divider="@color/black"
             android:dividerHeight="1dp"
             android:padding="8dp"
-            android:background="@drawable/contact_section_background" />
+            android:background="@android:color/transparent"
+            android:layout_marginBottom="8dp" />
 
     </LinearLayout>
 
+    <!-- Back Button to return to Home -->
     <Button
         android:id="@+id/doctorBackBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BACK TO HOME"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.926" />
+        android:layout_marginTop="16dp"
+    android:textColor="@android:color/white" />
+
 </LinearLayout>
