@@ -126,7 +126,7 @@ public class RecordsCustomArrayAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
     private void deleteRecord(int recordId) {
-        String url = "http://10.0.2.2/testfyp/delete_record_patient.php?record_id=" + recordId;
+        String url = "http://10.21.148.28/clinic/delete_record_patient.php?record_id=" + recordId;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {

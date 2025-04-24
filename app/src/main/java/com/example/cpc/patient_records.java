@@ -48,7 +48,7 @@ public class patient_records extends Fragment implements RefreshableFragment{
     }
 
     private void fetchMedicalRecords(String userId) {
-        String url = "http://10.0.2.2/testfyp/get_records_by_patient.php?patient_id=" + userId;
+        String url = "http://10.21.148.28/clinic/get_records_by_patient.php?patient_id=" + userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 

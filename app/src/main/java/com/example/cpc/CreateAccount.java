@@ -375,7 +375,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
     private void checkUsernameAvailability(String username, UsernameCheckCallback callback) {
-        String url = "http://10.0.2.2/clinic/check_username.php";
+        String url = "http://10.21.148.28/clinic/check_username.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -414,7 +414,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
     private void checkContactAvailability(String contactValue, ContactCheckCallback callback) {
-        String url = "http://10.0.2.2/clinic/check_contact_value.php";
+        String url = "http://10.21.148.28/clinic/check_contact_value.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
