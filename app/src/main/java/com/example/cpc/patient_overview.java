@@ -53,7 +53,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
         return view;
     }
     private void fetchUsername(String userId) {
-        String url = "http://10.21.148.28/clinic/get_patient_username.php?id=" + userId;
+        String url = "http://10.21.134.17/clinic/get_patient_username.php?id=" + userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
 
@@ -90,7 +90,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
     }
 
     private void fetchAppointments(String userId) {
-        String url = "http://10.21.148.28/clinic/get_appointments_by_patient.php?patient_id=" + userId;
+        String url = "http://10.21.134.17/clinic/get_appointments_by_patient.php?patient_id=" + userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 

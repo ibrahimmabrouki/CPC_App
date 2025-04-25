@@ -23,7 +23,7 @@ public class LabTechnicianOverviewFragment extends Fragment implements Refreshab
 
     private TextView tvAnnouncements, tvGreeting, tvPendingOrders;
     private String labTechId;
-    private final String BASE_URL = "http://10.21.148.28/clinic";
+    private final String BASE_URL = "http://10.21.134.17/clinic";
 
     @Nullable
     @Override

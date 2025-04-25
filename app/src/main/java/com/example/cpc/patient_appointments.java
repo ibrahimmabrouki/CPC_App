@@ -109,7 +109,7 @@ public class patient_appointments extends Fragment implements RefreshableFragmen
     }
 
     private void getDoctorsFromServer() {
-        String url = "http://10.21.148.28/clinic/get_doctors.php";
+        String url = "http://10.21.134.17/clinic/get_doctors.php";
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -139,7 +139,7 @@ public class patient_appointments extends Fragment implements RefreshableFragmen
         if (selectedDate == null || doctorSpinner.getSelectedItem() == null) return;
 
         String doctorName = doctorSpinner.getSelectedItem().toString();
-        String url = "http://10.21.148.28/clinic/get_available_slots.php?doctor=" + Uri.encode(doctorName) + "&date=" + Uri.encode(selectedDate);
+        String url = "http://10.21.134.17/clinic/get_available_slots.php?doctor=" + Uri.encode(doctorName) + "&date=" + Uri.encode(selectedDate);
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -170,7 +170,7 @@ public class patient_appointments extends Fragment implements RefreshableFragmen
 
 
     private void submitAppointment(String patientId, String doctorName, String date, String time, String reason) {
-        String url = "http://10.21.148.28/clinic/submit_appointment.php";
+        String url = "http://10.21.134.17/clinic/submit_appointment.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {

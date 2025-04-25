@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class PharmacistPrescriptionFragment extends Fragment implements RefreshableFragment {
 
-    private final String BASE_URL = "http://10.21.148.28/clinic";
+    private final String BASE_URL = "http://10.21.134.17/clinic";
     private String pharmacistId = "";
     private LinearLayout prescriptionContainer;
 

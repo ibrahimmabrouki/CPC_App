@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class LabTestOrdersFragment extends Fragment {
 
-    private final String BASE_URL = "http://10.21.148.28/clinic";
+    private final String BASE_URL = "http://10.21.134.17/clinic";
     private LinearLayout labOrderContainer;
     private String labTechId = "";
 

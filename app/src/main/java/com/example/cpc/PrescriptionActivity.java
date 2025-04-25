@@ -19,7 +19,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     EditText etPatientId, etMedication, etDosage, etInstructions;
     String doctorId = "";
     int appointmentId;
-    final String BASE_URL = "http://10.21.148.28/clinic";
+    final String BASE_URL = "http://10.21.134.17/clinic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
