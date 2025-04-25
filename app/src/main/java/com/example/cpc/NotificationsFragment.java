@@ -63,7 +63,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
     private ArrayList<String> messages = new ArrayList<>();
     private final ArrayList<String> staffNames = new ArrayList<>();
     private final ArrayList<String> staffIds = new ArrayList<>();
-
+    private final Object messageLock = new Object();
     private LinearLayout chatListLayout, chatViewLayout;
     private RecyclerView rvStaff, rvChat;
     private ChatAdapter chatAdapter;
@@ -151,34 +151,26 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         btnSend.setOnClickListener(v -> {
             String message = etMessage.getText().toString().trim();
-
-            if (chatWith == null) {
-                Toast.makeText(requireContext(), "Please select a staff member to chat with.", Toast.LENGTH_SHORT).show();
+            if (chatWith == null || writer == null || message.isEmpty()) {
                 return;
             }
 
-            if (writer == null) {
-                Toast.makeText(requireContext(), "Socket not connected yet. Try again shortly.", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            getUsernameById(chatWith, recipientUsername -> {
+                new Thread(() -> {
+                    writer.println(recipientUsername + "|" + message);
+                    saveMessageToDatabase(currentUserId, chatWith, message);
 
-            if (!message.isEmpty()) {
-                getUsernameById(chatWith, recipientUsername -> {
-                    Log.d("Chat", "Sending to " + recipientUsername + " → " + message);
-
-                    new Thread(() -> {
-                        writer.println(recipientUsername + "|" + message);
-
-                        saveMessageToDatabase(currentUserId, chatWith, message);
-
-                        new Handler(Looper.getMainLooper()).post(() -> {
+                    requireActivity().runOnUiThread(() -> {
+                        synchronized (messageLock) {
+                            int position = messages.size();
                             messages.add("Me: " + message);
-                            chatAdapter.notifyItemInserted(messages.size() - 1);
-                            rvChat.scrollToPosition(messages.size() - 1);                            etMessage.setText("");
-                        });
-                    }).start();
-                });
-            }
+                            chatAdapter.notifyItemInserted(position);
+                            rvChat.smoothScrollToPosition(position);
+                            etMessage.setText("");
+                        }
+                    });
+                }).start();
+            });
         });
 
 
@@ -219,11 +211,12 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
             try {
                 String line;
                 while (!Thread.interrupted() && (line = reader.readLine()) != null) {
-                    String finalLine = line;
-                    new Handler(Looper.getMainLooper()).post(() -> {
+                    final String finalLine = line;
+                    requireActivity().runOnUiThread(() -> {
+                        int position = messages.size();
                         messages.add(finalLine);
-                        chatAdapter.notifyItemInserted(messages.size() - 1);
-                        rvChat.scrollToPosition(messages.size() - 1);
+                        chatAdapter.notifyItemInserted(position);
+                        rvChat.smoothScrollToPosition(position);
 
                         // Extract sender name for notifications
                         String[] parts = finalLine.split(": ", 2);
@@ -234,7 +227,6 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                 }
             } catch (IOException e) {
                 if (!Thread.interrupted()) {
-                    Log.e("Socket", "Error in listen thread", e);
                     requireActivity().runOnUiThread(() ->
                             Toast.makeText(requireContext(), "Connection error", Toast.LENGTH_SHORT).show()
                     );
@@ -313,7 +305,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    messages.clear();
+                    List<String> newMessages = new ArrayList<>();
 
                     getUsernameById(otherId, otherUsername -> {
                         for (int i = 0; i < response.length(); i++) {
@@ -323,23 +315,28 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                                 String content = obj.getString("message");
 
                                 if (senderId.equals(myId)) {
-                                    messages.add("Me: " + content);
+                                    newMessages.add("Me: " + content);
                                 } else {
-                                    messages.add(otherUsername + ": " + content);
+                                    newMessages.add(otherUsername + ": " + content);
                                 }
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        chatAdapter.notifyDataSetChanged();
+
+                        // Update on UI thread
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            messages.clear();
+                            messages.addAll(newMessages);
+                            chatAdapter.notifyDataSetChanged();
+                        });
                     });
                 },
                 error -> Log.e("Chat", "Error loading chat history")
         );
-
         Volley.newRequestQueue(requireContext()).add(request);
     }
+
     private void markMessagesAsRead(String senderId, String recipientId) {
         String url = BASE_URL + "/markAsRead.php";
 
