@@ -244,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent = new Intent(getApplicationContext(), PharmacistActivity.class);
 
                             }
-                            else if (userType.equals("Labratory")) {
+                            else if (userType.equals("Lab Technician")) {
                                 successImage.setImageResource(R.drawable.labratory_toast_bg);
                                 showCustomToast("Logged in as Laboratory");
                                 intent = new Intent(getApplicationContext(), LabTechnicianActivity.class);
