@@ -44,8 +44,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
     private String currentUsername;
     private String chatWith;
 
-    private ArrayList<String> staffNames = new ArrayList<>();
-    private ArrayList<String> staffIds = new ArrayList<>();
+    private ArrayList<StaffItem> staffList = new ArrayList<>();
+    private StaffAdapter staffAdapter;
     private List<Object> chatItems = new ArrayList<>();
 
     private LinearLayout chatListLayout, chatViewLayout;
@@ -54,7 +54,6 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
     private ImageButton btnSend;
     private TextView tvChatUsername;
 
-    private ArrayAdapter<String> staffAdapter;
     private ChatAdapter chatAdapter;
 
     private Socket socket;
@@ -69,7 +68,6 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        // UI Initialization
         currentUserId = getArguments().getString("user_id");
 
         chatListLayout = rootView.findViewById(R.id.chat_list_layout);
@@ -80,7 +78,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         btnSend = rootView.findViewById(R.id.btn_send);
         tvChatUsername = rootView.findViewById(R.id.tv_chat_username);
 
-        staffAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, staffNames);
+        staffAdapter = new StaffAdapter(requireContext(), staffList);
         lvStaff.setAdapter(staffAdapter);
 
         chatAdapter = new ChatAdapter(requireContext(), chatItems, currentUsername);
@@ -90,8 +88,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         setupSocketConnection();
 
         lvStaff.setOnItemClickListener((parent, view, position, id) -> {
-            chatWith = staffIds.get(position);
-            tvChatUsername.setText(staffNames.get(position));
+            chatWith = staffList.get(position).getId();
+            tvChatUsername.setText(staffList.get(position).getName());
 
             chatListLayout.setVisibility(View.GONE);
             chatViewLayout.setVisibility(View.VISIBLE);
@@ -147,9 +145,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
     private void handleIncomingMessage(String messageLine) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            if (chatWith == null) return; // Not chatting with anyone yet
+            if (chatWith == null) return;
 
-            // Parse message
             String[] parts = messageLine.split(": ", 2);
             if (parts.length == 2) {
                 String senderName = parts[0];
@@ -161,22 +158,21 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                         senderName,
                         content,
                         isMe,
-                        new Date() // We don't have real timestamp from server, assume now
+                        new Date()
                 );
 
                 addMessageWithDate(message);
 
-                // Auto mark as read if open
-                int index = staffNames.indexOf(senderName);
-                if (index != -1) {
-                    String senderId = staffIds.get(index);
-                    if (senderId.equals(chatWith)) {
-                        markMessagesAsRead(senderId, currentUserId);
+                for (StaffItem staff : staffList) {
+                    if (staff.getName().equals(senderName) && staff.getId().equals(chatWith)) {
+                        markMessagesAsRead(staff.getId(), currentUserId);
+                        break;
                     }
                 }
             }
         });
     }
+
 
     private void sendMessage() {
         String message = etMessage.getText().toString().trim();
@@ -214,6 +210,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         }
         chatItems.add(message);
         chatAdapter.notifyDataSetChanged();
+        lvChat.post(() -> lvChat.setSelection(chatAdapter.getCount() - 1));
     }
 
     private String getFriendlyDate(String rawDate) {
@@ -253,13 +250,15 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         RequestQueue queue = Volley.newRequestQueue(requireContext());
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    staffNames.clear();
-                    staffIds.clear();
+                    staffList.clear();
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
-                            staffNames.add(obj.getString("username"));
-                            staffIds.add(obj.getString("id"));
+                            String id = obj.getString("id");
+                            String name = obj.getString("username");
+                            String type = obj.getString("type"); // Make sure your backend sends this!
+
+                            staffList.add(new StaffItem(id, name, type));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -270,6 +269,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         queue.add(request);
     }
+
 
     private void loadStoredMessages(String myId, String otherId) {
         String url = BASE_URL + "/getMessages.php?user_id=" + myId + "&other_id=" + otherId;
@@ -287,12 +287,21 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                                 String content = obj.getString("message");
 
                                 boolean isMe = senderId.equals(myId);
+                                String timestampString = obj.getString("timestamp");
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                Date timestamp = new Date();
+                                try {
+                                    timestamp = sdf.parse(timestampString);
+                                } catch (Exception e) {
+                                    e.printStackTrace(); // fallback in case parsing fails
+                                }
 
                                 ChatMessage message = new ChatMessage(
                                         isMe ? "Me" : otherUsername,
                                         content,
                                         isMe,
-                                        new Date() // Ideally, parse timestamp from DB
+                                        timestamp
                                 );
                                 addMessageWithDate(message);
 
@@ -301,6 +310,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                             }
                         }
                         chatAdapter.notifyDataSetChanged();
+                        lvChat.post(() -> lvChat.setSelection(chatAdapter.getCount() - 1));
                     });
                 },
                 error -> Log.e("Chat", "Error loading chat history")

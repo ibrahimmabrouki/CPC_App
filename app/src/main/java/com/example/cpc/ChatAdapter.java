@@ -13,12 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * ChatAdapter that supports:
- * - Sent Messages
- * - Received Messages
- * - Date Headers (Today, Yesterday, etc)
- */
 public class ChatAdapter extends ArrayAdapter<Object> {
 
     private static final int TYPE_SENT = 0;

@@ -1,54 +1,41 @@
 package com.example.cpc;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
-public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.StaffViewHolder> {
+public class StaffAdapter extends ArrayAdapter<StaffItem> {
 
-    private List<String> staffList;
-    private OnStaffClickListener listener;
-
-    public interface OnStaffClickListener {
-        void onStaffClick(int position);
-    }
-
-    public StaffAdapter(List<String> staffList, OnStaffClickListener listener) {
-        this.staffList = staffList;
-        this.listener = listener;
-    }
-
-    @NonNull
-    @Override
-    public StaffViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_staff, parent, false);
-        return new StaffViewHolder(view);
+    public StaffAdapter(Context context, List<StaffItem> staffList) {
+        super(context, 0, staffList);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StaffViewHolder holder, int position) {
-        holder.tvStaffName.setText(staffList.get(position));
-        holder.itemView.setOnClickListener(v -> listener.onStaffClick(position));
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        StaffItem staff = getItem(position);
 
-    @Override
-    public int getItemCount() {
-        return staffList.size();
-    }
-
-    static class StaffViewHolder extends RecyclerView.ViewHolder {
-        TextView tvStaffName;
-
-        public StaffViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvStaffName = itemView.findViewById(R.id.tv_staff_name);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.staff_item, parent, false);
         }
+
+        ImageView imgProfile = convertView.findViewById(R.id.img_profile);
+        TextView tvName = convertView.findViewById(R.id.tv_staff_name);
+
+        tvName.setText(staff.getName());
+
+        if (staff.getType().equalsIgnoreCase("doctor")) {
+            imgProfile.setImageResource(R.drawable.ic_profile_doctor);
+        } else if (staff.getType().equalsIgnoreCase("pharmacist")) {
+            imgProfile.setImageResource(R.drawable.ic_profile_pharmacist);
+        } else if (staff.getType().equalsIgnoreCase("lab")) {
+            imgProfile.setImageResource(R.drawable.ic_profile_lab);
+        }
+
+        return convertView;
     }
 }
