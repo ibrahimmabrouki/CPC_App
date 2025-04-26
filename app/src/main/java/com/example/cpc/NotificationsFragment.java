@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -174,13 +175,10 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                 }
 
                 if (chattingWithSender) {
-                    for (StaffItem staff : staffList) {
-                        if (staff.getName().trim().equalsIgnoreCase(senderName.trim())) {
-                            markMessagesAsRead(staff.getId(), currentUserId);
-                            break;
-                        }
-                    }
+                    // User is already inside the chat -> mark as read immediately
+                    markMessagesAsRead(chatWith, currentUserId);
                 } else {
+                    // Otherwise show unread dot
                     for (StaffItem staff : staffList) {
                         if (staff.getName().trim().equalsIgnoreCase(senderName.trim())) {
                             staff.setHasUnread(true);
@@ -285,9 +283,12 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                             JSONObject obj = response.getJSONObject(i);
                             String id = obj.getString("id");
                             String name = obj.getString("username");
-                            String type = obj.getString("type"); // Make sure your backend sends this!
+                            String type = obj.getString("type");
 
-                            staffList.add(new StaffItem(id, name, type));
+                            StaffItem staffItem = new StaffItem(id, name, type);
+                            staffList.add(staffItem);
+
+                            fetchUnreadStatusForStaff(id);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -298,6 +299,30 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         queue.add(request);
     }
+    private void fetchUnreadStatusForStaff(String otherUserId) {
+        String url = BASE_URL + "/checkUnread.php?my_id=" + currentUserId + "&other_id=" + otherUserId;
+
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        int unread = response.getInt("unread");
+
+                        for (StaffItem staff : staffList) {
+                            if (staff.getId().equals(otherUserId)) {
+                                staff.setHasUnread(unread == 1);
+                                staffAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Log.e("Chat", "Error fetching unread status"));
+        queue.add(request);
+    }
+
 
 
     private void loadStoredMessages(String myId, String otherId) {
@@ -410,6 +435,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
             @Override
             public void handleOnBackPressed() {
                 if (chatViewLayout.getVisibility() == View.VISIBLE) {
+                    chatWith = null;
                     chatViewLayout.setVisibility(View.GONE);
                     chatListLayout.setVisibility(View.VISIBLE);
                 } else {
