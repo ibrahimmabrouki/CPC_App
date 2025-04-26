@@ -67,7 +67,8 @@ public class ChatAdapter extends ArrayAdapter<Object> {
                 convertView = inflater.inflate(R.layout.item_date_header, parent, false);
             }
             TextView dateText = convertView.findViewById(R.id.date_header_text);
-            dateText.setText((String) item);
+            String dateString = (String) item;
+            dateText.setText(dateString);
 
         } else if (viewType == TYPE_SENT) {
             if (convertView == null) {
@@ -94,4 +95,5 @@ public class ChatAdapter extends ArrayAdapter<Object> {
 
         return convertView;
     }
+
 }

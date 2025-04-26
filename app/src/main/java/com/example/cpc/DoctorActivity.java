@@ -32,7 +32,7 @@ public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
     private final String BASE_URL = "http://10.21.134.17/clinic";
-    private String currentUserId = "1";
+    private String currentUserId = "11";
 
     private boolean isInChatFragment = false;
     @Override
