@@ -24,7 +24,7 @@ public class StaffAdapter extends ArrayAdapter<StaffItem> {
         }
 
         ImageView imgProfile = convertView.findViewById(R.id.img_profile);
-        TextView tvName = convertView.findViewById(R.id.tv_staff_name);
+        TextView tvName = convertView.findViewById(R.id.staff_name);
 
         tvName.setText(staff.getName());
 
