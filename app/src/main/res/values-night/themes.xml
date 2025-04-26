@@ -8,6 +8,7 @@
         <item name="colorSecondary">@color/blue</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:windowBackground">@color/light_gray</item>
+        <item name="android:colorBackground">@color/deep_blue</item>
     </style>
 
     <!-- Splash for night -->

@@ -37,4 +37,18 @@
     <color name="chat_bubble_received">#EEEEEE</color>
     <color name="blue_read">#2196F3</color>
     <color name="gray_unread">#9E9E9E</color>
+
+    <!--<color name="primary_dark">#153558</color>-->
+    <color name="primary_light">#E1F0FA</color>
+    <color name="surface_variant">#F5F9FD</color>
+
+    <color name="m3_primary">#6750A4</color>
+    <color name="m3_on_primary">#FFFFFF</color>
+    <color name="m3_primary_container">#EADDFF</color>
+    <color name="m3_on_primary_container">#21005D</color>
+    <color name="m3_secondary_container">#E8DEF8</color>
+    <color name="m3_tertiary_container">#FFD8E4</color>
+    <color name="m3_on_tertiary_container">#31111D</color>
+    <color name="m3_surface_container">#FEF7FF</color>
+
 </resources>

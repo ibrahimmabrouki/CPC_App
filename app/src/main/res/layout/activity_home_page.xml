@@ -1,182 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#011E40"
+    android:background="@android:color/white"
     tools:context=".Home_page">
 
-    <ScrollView
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#010C80"
+    android:elevation="4dp"
+    app:titleCentered="false"
+    app:navigationIcon="@android:drawable/ic_menu_help"
+    app:navigationIconTint="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginStart="48dp"
+    android:layout_gravity="center_vertical">
+
+
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CarePoint Clinic"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true"
         android:padding="16dp">
 
         <LinearLayout
             android:id="@+id/homeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <!-- Header -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingBottom="16dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_clinic_logo"
-                    app:tint="@android:color/white"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="Clinic Logo" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="CARE POINT\nCLINIC"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:lineSpacingExtra="2dp" />
-
-                <Button
-                    android:id="@+id/homepage_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LOG IN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:backgroundTint="#1B3B6F" />
-            </LinearLayout>
-
-            <!-- Navigation -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
-
-                <Button
-                    android:id="@+id/view_doctors"
-                    android:layout_width="0dp"
-                    android:layout_height="138dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#153558"
-                    android:drawableTop="@drawable/ic_doctor"
-                    android:drawablePadding="6dp"
-                    android:gravity="center"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="DOCTORS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/view_services"
-                    android:layout_width="0dp"
-                    android:layout_height="138dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#153558"
-                    android:drawableTop="@drawable/ic_services"
-                    android:drawablePadding="6dp"
-                    android:gravity="center"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="SERVICES"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/view_contact"
-                    android:layout_width="0dp"
-                    android:layout_height="138dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#153558"
-                    android:drawableTop="@drawable/ic_contact"
-                    android:drawablePadding="6dp"
-                    android:gravity="center"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="CONTACT"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
-            </LinearLayout>
+            android:orientation="vertical">
 
             <!-- Hero Section -->
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="260dp"
-                    android:contentDescription="Hero Image"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/doctor_home" />
-
-                <TextView
-                    android:layout_width="154dp"
-                    android:layout_height="66dp"
-                    android:layout_gravity="bottom|start"
-                    android:layout_margin="24dp"
-                    android:lineSpacingExtra="6dp"
-                    android:text="Your Health is\nOur Priority"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <!-- Quick Access -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="8dp">
+                android:paddingVertical="32dp">
 
-                <Button
-                    android:id="@+id/make_appointment"
-                    android:layout_width="0dp"
-                    android:layout_height="165dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#1A4566"
-                    android:drawableTop="@drawable/ic_appointments"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="4dp"
-                    android:padding="12dp"
-                    android:text="MY\nAPPOINTMENTS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/btnMyRecords"
-                    android:layout_width="0dp"
-                    android:layout_height="165dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#1A4566"
-                    android:drawableTop="@drawable/ic_records1"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="4dp"
-                    android:padding="12dp"
-                    android:text="MY\nRECORDS"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                <ImageView
+                    android:layout_width="600dp"
+                    android:layout_height="250dp"
+                    android:src="@drawable/doctor_home"
+                    android:scaleType="centerInside"
+                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Health Is Our Priority"
+                    android:textColor="#010C80"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"/>
             </LinearLayout>
+
+            <!-- Quick Actions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <!-- Row 1 -->
+                <!-- Row 1 -->
+                <!-- Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/view_doctors"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_button_background"
+                        android:drawableTop="@android:drawable/ic_menu_myplaces"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@android:color/white"
+                        android:gravity="center"
+                        android:text="Doctors"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/view_services"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="1"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/custom_button_background"
+                        android:gravity="center"
+                        android:drawableTop="@android:drawable/ic_menu_manage"
+                        android:drawablePadding="8dp"
+                        android:text="Services"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:drawableTint="@android:color/white" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Contact Button -->
+            <Button
+                android:id="@+id/view_contact"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:text="Contact Us"
+                android:textSize="18sp"
+                android:textColor="#010C80"
+                android:backgroundTint="#E1F0FA"
+                android:drawableLeft="@android:drawable/ic_menu_call"
+                android:drawablePadding="16dp"
+                android:drawableTint="@android:color/white"/>
+
+            <!-- Login Button -->
+            <Button
+                android:id="@+id/homepage_login"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:text="Login / Register"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#010C80"
+                android:drawableLeft="@android:drawable/ic_lock_lock"
+                android:drawablePadding="16dp"
+                android:drawableTint="@android:color/white"/>
         </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,21 +1,26 @@
 package com.example.cpc;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -28,6 +33,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,12 +44,12 @@ import java.util.List;
 
 public class Home_page extends AppCompatActivity {
 
-    Button make_appointment, homepage_login, view_doctors, view_services, view_contact;
-    Button contactBackBtn, serviceBackBtn, btnMyRecords, doctorBackBtn;
+    Button homepage_login, view_doctors, view_services, view_contact;
+    Button contactBackBtn, serviceBackBtn, doctorBackBtn;
     LinearLayout homeLayout, contact_layout, doctorlayout;
     ScrollView service_layout;
     ListView doctors_lv;
-
+    MaterialToolbar topAppBar;
     private List<String> doctorsList = new ArrayList<>();
 
 
@@ -51,6 +58,38 @@ public class Home_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+
+        topAppBar.setNavigationOnClickListener(view -> {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.main),
+                    "• Doctors: View staff\n• Services: Explore options\n• Contact Us: Get in touch\n• Login: Access your account",
+                    Snackbar.LENGTH_INDEFINITE);
+
+            // Get the Snackbar view
+            View snackbarView = snackbar.getView();
+            snackbarView.setBackgroundColor(Color.parseColor("#153558")); // Optional if you're not using drawable
+
+            // Move to top or center
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackbarView.getLayoutParams();
+            params.gravity = Gravity.TOP;  // Or Gravity.CENTER
+            params.setMargins(32, 250, 32, 0);
+            snackbarView.setLayoutParams(params);
+
+            // Style the text
+            TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
+            textView.setTextSize(18);
+            textView.setMaxLines(5);
+
+            // 🔽 SHOW THE SNACKBAR
+            snackbar.show();
+
+            // ✅ SET ROUNDED BACKGROUND AFTER SHOW
+            snackbarView.setBackground(ContextCompat.getDrawable(Home_page.this, R.drawable.snackbar_background));
+
+            // Auto dismiss after 5 sec
+            new android.os.Handler().postDelayed(snackbar::dismiss, 5000);
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -66,13 +105,11 @@ public class Home_page extends AppCompatActivity {
         }
 
         // Initialize all views
-        make_appointment = findViewById(R.id.make_appointment);
         homepage_login = findViewById(R.id.homepage_login);
         view_doctors = findViewById(R.id.view_doctors);
         view_services = findViewById(R.id.view_services);
         view_contact = findViewById(R.id.view_contact);
         homeLayout = findViewById(R.id.homeLayout);
-        btnMyRecords = findViewById(R.id.btnMyRecords);
 
         // Inflate contact section into the main layout
         View contactView = getLayoutInflater().inflate(R.layout.contact_section, (ViewGroup) findViewById(R.id.main), false);
@@ -99,10 +136,7 @@ public class Home_page extends AppCompatActivity {
 
 
         // Open login screen
-        make_appointment.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        });
+
 
         // Open login screen
         homepage_login.setOnClickListener(v -> {
@@ -111,10 +145,7 @@ public class Home_page extends AppCompatActivity {
         });
 
         // Open login screen
-        btnMyRecords.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        });
+
 
         // Show contact section
         view_contact.setOnClickListener(v -> {

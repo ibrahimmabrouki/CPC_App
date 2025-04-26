@@ -49,4 +49,9 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.android.volley:volley:1.2.1")
     implementation(libs.core.splashscreen)
+    implementation("com.google.android.material:material:1.9.0")
+    implementation ("com.airbnb.android:lottie:6.0.0")
+    implementation ("androidx.gridlayout:gridlayout:1.0.0")
+    implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 }

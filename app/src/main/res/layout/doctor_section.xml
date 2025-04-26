@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/doctorLayout"
     android:layout_width="match_parent"
@@ -10,34 +9,40 @@
     android:background="@drawable/contact_section_background"
     android:visibility="gone">
 
-    <!-- Row layout for holding the ListView -->
     <LinearLayout
-        android:id="@+id/rowLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/contact_section_background">
+        android:paddingTop="16dp"
+        android:background="@drawable/contact_section_background"
+        android:layout_marginBottom="16dp">
 
-        <!-- ListView for displaying the doctor names -->
         <ListView
             android:id="@+id/doctors_lv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:divider="@color/black"
             android:dividerHeight="1dp"
-            android:padding="8dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:background="@android:color/transparent"
-            android:layout_marginBottom="8dp" />
-
+            android:textAlignment="center"
+            android:scrollbars="none" />
     </LinearLayout>
 
-    <!-- Back Button to return to Home -->
     <Button
         android:id="@+id/doctorBackBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BACK TO HOME"
         android:layout_marginTop="16dp"
-    android:textColor="@android:color/white" />
-
+        android:backgroundTint="#153558"
+        android:textColor="@android:color/white"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/button_background"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
 </LinearLayout>
