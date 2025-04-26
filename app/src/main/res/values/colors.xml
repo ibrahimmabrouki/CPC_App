@@ -10,7 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#010C80</color>
     <color name="light_gray">#F5F5F5</color>
-    <color name="primary_dark">#1A237E</color>
     <color name="primary">#2196F3</color>
     <color name="accent_green">#4CAF50</color>
     <color name="blue">#2196F3</color>
@@ -27,4 +26,18 @@
     <color name="chat_message_received_text">#000000</color>
     <color name="chat_header">#1A237E</color>
     <color name="gray">#9E9E9E</color>
+
+    <color name="primary_dark">#153558</color>
+    <color name="primary_light">#E1F0FA</color>
+    <color name="surface_variant">#F5F9FD</color>
+
+    <color name="m3_primary">#6750A4</color>
+    <color name="m3_on_primary">#FFFFFF</color>
+    <color name="m3_primary_container">#EADDFF</color>
+    <color name="m3_on_primary_container">#21005D</color>
+    <color name="m3_secondary_container">#E8DEF8</color>
+    <color name="m3_tertiary_container">#FFD8E4</color>
+    <color name="m3_on_tertiary_container">#31111D</color>
+    <color name="m3_surface_container">#FEF7FF</color>
+
 </resources>
