@@ -32,12 +32,14 @@ public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
     private final String BASE_URL = "http://10.21.134.17/clinic";
-    private String currentUserId = "";
+    private String currentUserId = "11";
+
+    private boolean isInChatFragment = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor);
-        currentUserId = getIntent().getStringExtra("user_id");
+        //currentUserId = getIntent().getStringExtra("user_id");
 
         // Set default fragment
         if (savedInstanceState == null) {
@@ -91,6 +93,21 @@ public class DoctorActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_global_refresh, menu);
         return true;
     }
+    public void setInChatFragment(boolean inChatFragment) {
+        this.isInChatFragment = inChatFragment;
+        adjustPollingFrequency();
+    }
+    private void adjustPollingFrequency() {
+        pollingHandler.removeCallbacks(pollingRunnable);
+        if (isInChatFragment) {
+            // Less frequent polling when in chat (socket is active)
+            pollingHandler.postDelayed(pollingRunnable, 30000);
+        } else {
+            // More frequent polling when not in chat
+            pollingHandler.postDelayed(pollingRunnable, 5000);
+        }
+    }
+    //for better battery
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -128,20 +145,21 @@ public class DoctorActivity extends AppCompatActivity {
                             String content = obj.getString("message");
                             int read = obj.getInt("read");
 
-                            if (read == 0) { // Only show if unread
+                            if (read == 0) {
                                 getUsernameById(senderId, username -> {
-                                    showNotification(username, content);
+                                    // Only show notification if not currently in chat with this user
+                                    if (!isInChatFragment) {
+                                        showNotification(username, content);
+                                    }
                                 });
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 },
-                error -> Log.e("Polling", "Error checking new messages: " + error.toString())
+                error -> Log.e("Polling", "Error checking new messages")
         );
-
         Volley.newRequestQueue(this).add(request);
     }
 

@@ -5,88 +5,108 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.Manifest;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import java.util.List;
-import java.util.Random;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.Manifest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import java.util.ArrayList;
-import java.io.*;
-import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.view.Gravity;
-import android.content.res.ColorStateList;
-import android.widget.ImageButton;
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
-public class NotificationsFragment extends Fragment implements RefreshableFragment{
+public class NotificationsFragment extends Fragment {
 
-    String currentUserId;
-    String currentUsername = null;
-    private final String BASE_URL = "http://10.21.134.17/clinic";
-    private ArrayList<String> staffList = new ArrayList<>();
-    private ArrayList<String> messages = new ArrayList<>();
-    private final ArrayList<String> staffNames = new ArrayList<>();
-    private final ArrayList<String> staffIds = new ArrayList<>();
-    private final Object messageLock = new Object();
+    private static final String TAG = "NotificationsFragment";
+    private static final String CHANNEL_ID = "chat_channel";
+    private static final int NOTIFICATION_PERMISSION_CODE = 101;
+    private static final int SOCKET_RECONNECT_DELAY = 5000;
+
+    // UI Components
     private LinearLayout chatListLayout, chatViewLayout;
     private RecyclerView rvStaff, rvChat;
-    private ChatAdapter chatAdapter;
-    private StaffAdapter staffAdapter;
     private TextView tvChatTitle;
-    private ImageButton btnBack;
     private EditText etMessage;
-    private ImageButton btnSend;
-    private String chatWith;
+    private ImageButton btnSend, btnBack;
 
-    Socket socket;
-    BufferedReader reader;
-    PrintWriter writer;
-    Thread listenThread;
+    // Adapters
+    private StaffAdapter staffAdapter;
+    private ChatAdapter chatAdapter;
+
+    // Data
+    private String currentUserId;
+    private String currentUsername;
+    private String chatWith;
+    private final ArrayList<String> staffList = new ArrayList<>();
+    private final ArrayList<String> staffIds = new ArrayList<>();
+    private boolean isChatActive = false;
+
+    // Network
+    private final String BASE_URL = "http://10.21.134.17/clinic";
+    private Socket socket;
+    private BufferedReader reader;
+    private PrintWriter writer;
+    private Thread listenThread;
+    private boolean shouldReconnect = true;
+    private Handler typingHandler = new Handler();
+    private boolean isTyping = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
+        setupViews(rootView);
+        setupAdapters();
+        setupClickListeners();
+        requestNotificationPermission();
+        fetchStaffUsers();
+        connectToSocket();
+        return rootView;
+    }
 
+    private void setupViews(View rootView) {
         currentUserId = getArguments().getString("user_id");
         chatListLayout = rootView.findViewById(R.id.chat_list_layout);
         chatViewLayout = rootView.findViewById(R.id.chat_view_layout);
@@ -99,256 +119,322 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         rvStaff.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvChat.setLayoutManager(new LinearLayoutManager(requireContext()));
+    }
 
+    private void setupAdapters() {
         staffAdapter = new StaffAdapter(staffList, position -> {
             chatWith = staffIds.get(position);
+            isChatActive = true;
             tvChatTitle.setText(staffList.get(position));
 
             chatListLayout.setVisibility(View.GONE);
             chatViewLayout.setVisibility(View.VISIBLE);
-            messages.clear();
-            chatAdapter.notifyItemInserted(messages.size() - 1);
-            rvChat.scrollToPosition(messages.size() - 1);
+
+            chatAdapter.updateMessages(new ArrayList<>());
             loadStoredMessages(currentUserId, chatWith);
             markMessagesAsRead(chatWith, currentUserId);
         });
         rvStaff.setAdapter(staffAdapter);
 
-        chatAdapter = new ChatAdapter(messages, currentUserId);
+        chatAdapter = new ChatAdapter(currentUserId);
         rvChat.setAdapter(chatAdapter);
+    }
 
-// Back button handling
+    private void setupClickListeners() {
         btnBack.setOnClickListener(v -> {
+            isChatActive = false;
             chatViewLayout.setVisibility(View.GONE);
             chatListLayout.setVisibility(View.VISIBLE);
-            chatListLayout.setAlpha(0f);
-            chatListLayout.animate().alpha(1f).setDuration(300).start();
         });
 
-        fetchStaffUsers();
+        btnSend.setOnClickListener(v -> sendMessage());
+
+        etMessage.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && chatWith != null) {
+                sendTypingIndicator(true);
+            }
+        });
+
+        etMessage.setOnKeyListener((v, keyCode, event) -> {
+            if (chatWith != null) {
+                if (!isTyping) {
+                    isTyping = true;
+                    sendTypingIndicator(true);
+                }
+                typingHandler.removeCallbacksAndMessages(null);
+                typingHandler.postDelayed(() -> {
+                    isTyping = false;
+                    sendTypingIndicator(false);
+                }, 2000);
+            }
+            return false;
+        });
+    }
+
+    private void sendMessage() {
+        String message = etMessage.getText().toString().trim();
+        if (chatWith == null || writer == null || message.isEmpty()) return;
+
+        String messageId = UUID.randomUUID().toString();
+
+        getUsernameById(chatWith, recipientUsername -> {
+            new Thread(() -> {
+                // Send via socket (format: MSG|recipient|messageId|content)
+                writer.println("MSG|" + chatWith + "|" + messageId + "|" + message);
+
+                // Save to database
+                saveMessageToDatabase(currentUserId, chatWith, message, new MessageCallback() {
+                    @Override
+                    public void onSuccess(String dbMessageId, Date timestamp) {
+                        requireActivity().runOnUiThread(() -> {
+                            ChatMessage chatMessage = new ChatMessage(
+                                    messageId, currentUserId, "Me", chatWith,
+                                    message, timestamp, true, false, true, false);
+
+                            chatAdapter.addMessage(chatMessage);
+                            rvChat.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
+                            etMessage.setText("");
+                        });
+                    }
+                });
+            }).start();
+        });
+    }
+
+    private void sendTypingIndicator(boolean isTyping) {
+        if (writer != null && chatWith != null) {
+            new Thread(() -> {
+                writer.println("TYPING|" + chatWith + "|" + isTyping);
+            }).start();
+        }
+    }
+
+    private void connectToSocket() {
         getCurrentUsernameFromId(currentUserId, username -> {
             currentUsername = username;
-
             new Thread(() -> {
-                try {
-                    socket = new Socket("10.21.134.17", 8888);
-                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    writer = new PrintWriter(socket.getOutputStream(), true);
+                while (shouldReconnect && !Thread.interrupted()) {
+                    try {
+                        Log.d(TAG, "Attempting socket connection...");
+                        socket = new Socket("10.21.134.17", 8888);
+                        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        writer = new PrintWriter(socket.getOutputStream(), true);
 
-                    writer.println(currentUsername);
+                        writer.println(currentUsername);
+                        Log.d(TAG, "Socket connected successfully");
 
-                    listenForMessages();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    new Handler(Looper.getMainLooper()).post(() ->
-                            Toast.makeText(requireContext(), "Socket connection failed", Toast.LENGTH_SHORT).show()
-                    );
+                        listenForMessages();
+                        break;
+                    } catch (IOException e) {
+                        Log.e(TAG, "Socket connection failed", e);
+                        try {
+                            Thread.sleep(SOCKET_RECONNECT_DELAY);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
                 }
             }).start();
         });
-
-
-        btnSend.setOnClickListener(v -> {
-            String message = etMessage.getText().toString().trim();
-            if (chatWith == null || writer == null || message.isEmpty()) {
-                return;
-            }
-
-            getUsernameById(chatWith, recipientUsername -> {
-                new Thread(() -> {
-                    writer.println(recipientUsername + "|" + message);
-                    saveMessageToDatabase(currentUserId, chatWith, message);
-
-                    requireActivity().runOnUiThread(() -> {
-                        synchronized (messageLock) {
-                            int position = messages.size();
-                            messages.add("Me: " + message);
-                            chatAdapter.notifyItemInserted(position);
-                            rvChat.smoothScrollToPosition(position);
-                            etMessage.setText("");
-                        }
-                    });
-                }).start();
-            });
-        });
-
-
-        return rootView;
     }
 
-    private void fetchStaffUsers() {
-        String url = BASE_URL + "/getStaffUsers.php?exclude_id=" + currentUserId;
+    private void reconnectSocket() {
+        new Thread(() -> {
+            try {
+                if (socket != null && !socket.isClosed()) {
+                    socket.close();
+                }
 
-        RequestQueue queue = Volley.newRequestQueue(requireContext());
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                response -> {
-                    staffNames.clear();
-                    staffIds.clear();
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject obj = response.getJSONObject(i);
-                            String id = obj.getString("id");
-                            String username = obj.getString("username");
+                socket = new Socket("10.21.134.17", 8888);
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                writer = new PrintWriter(socket.getOutputStream(), true);
 
-                            staffNames.add(username);
-                            staffIds.add(id);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                writer.println(currentUsername);
+                listenForMessages();
+
+                Log.d(TAG, "Socket reconnected successfully");
+            } catch (IOException e) {
+                Log.e(TAG, "Reconnection failed", e);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (shouldReconnect) {
+                        reconnectSocket();
                     }
-                    staffList.clear();
-                    staffList.addAll(staffNames);
-                    staffAdapter.notifyDataSetChanged();
-                },
-                error -> Toast.makeText(requireContext(), "Failed to load staff", Toast.LENGTH_SHORT).show());
-
-        queue.add(request);
+                }, SOCKET_RECONNECT_DELAY);
+            }
+        }).start();
     }
 
     private void listenForMessages() {
         listenThread = new Thread(() -> {
-            try {
-                String line;
-                while (!Thread.interrupted() && (line = reader.readLine()) != null) {
-                    final String finalLine = line;
-                    requireActivity().runOnUiThread(() -> {
-                        int position = messages.size();
-                        messages.add(finalLine);
-                        chatAdapter.notifyItemInserted(position);
-                        rvChat.smoothScrollToPosition(position);
-
-                        // Extract sender name for notifications
-                        String[] parts = finalLine.split(": ", 2);
-                        if (parts.length == 2 && !parts[0].equals("Me")) {
-                            showNotification("New message from " + parts[0], parts[1]);
+            while (shouldReconnect && !Thread.interrupted()) {
+                try {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        final String message = line;
+                        requireActivity().runOnUiThread(() -> handleSocketMessage(message));
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Socket read error", e);
+                    if (shouldReconnect && !Thread.interrupted()) {
+                        try {
+                            Thread.sleep(SOCKET_RECONNECT_DELAY);
+                            reconnectSocket();
+                            break;
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
                         }
-                    });
-                }
-            } catch (IOException e) {
-                if (!Thread.interrupted()) {
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(requireContext(), "Connection error", Toast.LENGTH_SHORT).show()
-                    );
+                    }
                 }
             }
         });
         listenThread.start();
     }
 
+    private void handleSocketMessage(String message) {
+        try {
+            String[] parts = message.split("\\|", 4);
+            if (parts.length >= 3) {
+                switch (parts[0]) {
+                    case "MSG":
+                        // Format: MSG|senderId|messageId|content
+                        String senderId = parts[1];
+                        String messageId = parts[2];
+                        String content = parts[3];
 
-    private void getUsernameById(String id, UsernameCallback callback) {
-        String url = BASE_URL + "/getUsernameById.php?id=" + id;
+                        getUsernameById(senderId, senderName -> {
+                            ChatMessage chatMessage = new ChatMessage(
+                                    messageId, senderId, senderName, currentUserId,
+                                    content, new Date(), true, isChatActive, false, false);
 
-        RequestQueue queue = Volley.newRequestQueue(requireContext());
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                response -> {
-                    try {
-                        if (response.length() > 0) {
-                            String username = response.getJSONObject(0).getString("username");
-                            callback.onUsernameReceived(username);
+                            chatAdapter.addMessage(chatMessage);
+                            rvChat.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
+
+                            if (isChatActive) {
+                                markMessagesAsRead(senderId, messageId);
+                            } else {
+                                showNotification(senderName, content);
+                            }
+                        });
+                        break;
+
+                    case "READ":
+                        // Format: READ|senderId|messageId
+                        String readMessageId = parts[2];
+                        chatAdapter.updateMessageStatus(readMessageId, true);
+                        break;
+
+                    case "TYPING":
+                        // Format: TYPING|senderId|isTyping
+                        boolean typing = Boolean.parseBoolean(parts[2]);
+                        String typingSenderId = parts[1];
+
+                        if (typing) {
+                            getUsernameById(typingSenderId, senderName -> {
+                                ChatMessage typingMessage = new ChatMessage(
+                                        "", typingSenderId, senderName, currentUserId,
+                                        "", new Date(), true, true, false, true);
+
+                                chatAdapter.addTypingIndicator(typingMessage);
+                            });
                         } else {
-                            Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show();
+                            chatAdapter.removeTypingIndicator(typingSenderId);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> Toast.makeText(requireContext(), "Error fetching username", Toast.LENGTH_SHORT).show()
-        );
-        queue.add(request);
-    }
-    private void getCurrentUsernameFromId(String id, UsernameCallback callback) {
-        String url = BASE_URL + "/getUsernameById.php?id=" + id;
-
-        RequestQueue queue = Volley.newRequestQueue(requireContext());
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                response -> {
-                    try {
-                        if (response.length() > 0) {
-                            String username = response.getJSONObject(0).getString("username");
-                            callback.onUsernameReceived(username);
-                        } else {
-                            Toast.makeText(requireContext(), "Current user not found", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> Toast.makeText(requireContext(), "Error fetching current username", Toast.LENGTH_SHORT).show()
-        );
-        queue.add(request);
-    }
-    private void saveMessageToDatabase(String senderId, String recipientId, String message) {
-        String url = BASE_URL + "/saveMessage.php";
-
-        StringRequest request = new StringRequest(Request.Method.POST, url,
-                response -> Log.d("Chat", "Message saved to DB"),
-                error -> Log.e("Chat", "Failed to save message: " + error.getMessage())
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("sender_id", senderId);
-                params.put("recipient_id", recipientId);
-                params.put("message", message);
-                return params;
+                        break;
+                }
             }
-        };
+        } catch (Exception e) {
+            Log.e(TAG, "Message handling error", e);
+        }
+    }
+
+    private void fetchStaffUsers() {
+        String url = BASE_URL + "/getStaffUsers.php?exclude_id=" + currentUserId;
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    staffIds.clear();
+                    staffList.clear();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String id = obj.getString("id");
+                            String username = obj.getString("username");
+
+                            staffIds.add(id);
+                            staffList.add(username);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing staff user", e);
+                        }
+                    }
+                    staffAdapter.notifyDataSetChanged();
+                },
+                error -> Log.e(TAG, "Failed to load staff", error));
 
         Volley.newRequestQueue(requireContext()).add(request);
     }
-
 
     private void loadStoredMessages(String myId, String otherId) {
         String url = BASE_URL + "/getMessages.php?user_id=" + myId + "&other_id=" + otherId;
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    List<String> newMessages = new ArrayList<>();
+                    List<ChatMessage> messages = new ArrayList<>();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String id = obj.getString("id");
+                            String senderId = obj.getString("sender_id");
+                            String senderName = obj.getString("sender_username");
+                            String recipientId = obj.getString("recipient_id");
+                            String message = obj.getString("message");
 
-                    getUsernameById(otherId, otherUsername -> {
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject obj = response.getJSONObject(i);
-                                String senderId = obj.getString("sender_id");
-                                String content = obj.getString("message");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date timestamp = sdf.parse(obj.getString("timestamp"));
 
-                                if (senderId.equals(myId)) {
-                                    newMessages.add("Me: " + content);
-                                } else {
-                                    newMessages.add(otherUsername + ": " + content);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            boolean delivered = obj.getInt("delivered") == 1;
+                            boolean read = obj.getInt("read") == 1;
+                            boolean isMe = senderId.equals(myId);
+
+                            messages.add(new ChatMessage(id, senderId, senderName, recipientId,
+                                    message, timestamp, delivered, read, isMe, false));
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing message", e);
                         }
+                    }
 
-                        // Update on UI thread
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            messages.clear();
-                            messages.addAll(newMessages);
-                            chatAdapter.notifyDataSetChanged();
-                        });
+                    requireActivity().runOnUiThread(() -> {
+                        chatAdapter.updateMessages(messages);
+                        if (!messages.isEmpty()) {
+                            rvChat.scrollToPosition(messages.size() - 1);
+                        }
                     });
                 },
-                error -> Log.e("Chat", "Error loading chat history")
-        );
+                error -> Log.e(TAG, "Error loading messages", error));
+
         Volley.newRequestQueue(requireContext()).add(request);
     }
 
-    private void markMessagesAsRead(String senderId, String recipientId) {
-        String url = BASE_URL + "/markAsRead.php";
+    private void markMessagesAsRead(String senderId, String messageId) {
+        // Update locally first
+        chatAdapter.updateMessageStatus(messageId, true);
 
+        // Notify server
+        if (writer != null) {
+            new Thread(() -> {
+                writer.println("READ|" + senderId + "|" + messageId);
+            }).start();
+        }
+
+        // Update database
+        String url = BASE_URL + "/markAsRead.php";
         StringRequest request = new StringRequest(Request.Method.POST, url,
-                response -> Log.d("Chat", "Marked as read"),
-                error -> Log.e("Chat", "Failed to mark as read")
-        ) {
+                response -> Log.d(TAG, "Marked as read"),
+                error -> Log.e(TAG, "Failed to mark as read", error)) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("sender_id", senderId);
-                params.put("recipient_id", recipientId);
+                params.put("recipient_id", currentUserId);
                 return params;
             }
         };
@@ -356,20 +442,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
     }
 
     private void showNotification(String title, String message) {
-        // Create notification channel for Android 8.0+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "chat_channel",
-                    "Chat Messages",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            channel.setDescription("Incoming chat messages");
-            channel.enableLights(true);
-            channel.setLightColor(ContextCompat.getColor(requireContext(), R.color.chat_message_sent));            NotificationManager manager = requireContext().getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
+        createNotificationChannel();
 
-        // Create intent to open chat when notification is tapped
         Intent intent = new Intent(requireContext(), MainActivity.class);
         intent.putExtra("fragment", "notifications");
         intent.putExtra("chat_with", chatWith);
@@ -377,75 +451,119 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 requireContext(),
-                0,
+                chatWith.hashCode(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Build notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "chat_channel")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_chat)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setColor(ContextCompat.getColor(requireContext(), R.color.chat_message_sent))
+                .setOnlyAlertOnce(true)
+                .setColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-        // Show notification
-        NotificationManagerCompat manager = NotificationManagerCompat.from(requireContext());
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            manager.notify(new Random().nextInt(1000), builder.build());
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(requireContext())
+                    .notify(new Random().nextInt(1000), builder.build());
         }
     }
 
-    interface UsernameCallback {
-        void onUsernameReceived(String username);
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Chat Messages",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Incoming chat messages");
+            channel.enableLights(true);
+            channel.setLightColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
+            channel.enableVibration(true);
+
+            NotificationManager manager = requireContext().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
     }
 
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_CODE);
+            }
+        }
+    }
+
+    private void getCurrentUsernameFromId(String id, UsernameCallback callback) {
+        String url = BASE_URL + "/getUsernameById.php?id=" + id;
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if (response.length() > 0) {
+                            callback.onUsernameReceived(response.getJSONObject(0).getString("username"));
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error getting username", e);
+                    }
+                },
+                error -> Log.e(TAG, "Error fetching username", error));
+
+        Volley.newRequestQueue(requireContext()).add(request);
+    }
+
+    private void getUsernameById(String id, UsernameCallback callback) {
+        String url = BASE_URL + "/getUsernameById.php?id=" + id;
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if (response.length() > 0) {
+                            callback.onUsernameReceived(response.getJSONObject(0).getString("username"));
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error getting username", e);
+                    }
+                },
+                error -> Log.e(TAG, "Error fetching username", error));
+
+        Volley.newRequestQueue(requireContext()).add(request);
+    }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        shouldReconnect = false;
         if (listenThread != null && listenThread.isAlive()) {
             listenThread.interrupt();
         }
         try {
             if (writer != null) writer.close();
             if (reader != null) reader.close();
-            if (socket != null && !socket.isClosed()) socket.close();
+            if (socket != null) socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error closing socket", e);
         }
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (chatViewLayout.getVisibility() == View.VISIBLE) {
-                    chatViewLayout.setVisibility(View.GONE);
-                    chatListLayout.setVisibility(View.VISIBLE);
-                } else {
-                    remove();
-                    requireActivity().onBackPressed();
-                }
-            }
-        });
+        super.onDestroy();
     }
 
-
-    @Override
-    public void onRefresh() {
-        fetchStaffUsers();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
+    // Interfaces
+    interface MessageCallback {
+        void onSuccess(String messageId, Date timestamp);
     }
 
+    interface UsernameCallback {
+        void onUsernameReceived(String username);
+    }
+
+    // Adapter classes
     private static class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder> {
         private final List<String> staffList;
         private final OnStaffClickListener listener;
@@ -462,7 +580,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staff, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_staff, parent, false);
             return new ViewHolder(view);
         }
 
@@ -487,66 +606,245 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         }
     }
 
-    private static class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-        private final List<String> messages;
-        private final String currentUserId;
+    private static class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int TYPE_MESSAGE = 0;
+        private static final int TYPE_DATE = 1;
+        private static final int TYPE_TYPING = 2;
 
-        ChatAdapter(List<String> messages, String currentUserId) {
-            this.messages = messages;
+        private final List<Object> items = new ArrayList<>();
+        private final String currentUserId;
+        private final Map<String, Integer> typingIndicators = new HashMap<>();
+
+        ChatAdapter(String currentUserId) {
             this.currentUserId = currentUserId;
         }
 
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_message, parent, false);
-            return new ViewHolder(view);
+        public void updateMessages(List<ChatMessage> messages) {
+            items.clear();
+            typingIndicators.clear();
+
+            String lastDate = "";
+            for (ChatMessage message : messages) {
+                String currentDate = message.getDisplayDate();
+                if (!currentDate.equals(lastDate)) {
+                    items.add(currentDate);
+                    lastDate = currentDate;
+                }
+                items.add(message);
+            }
+            notifyDataSetChanged();
+        }
+
+        public void addMessage(ChatMessage message) {
+            String currentDate = message.getDisplayDate();
+            if (items.isEmpty() || !items.get(items.size()-1).equals(currentDate)) {
+                items.add(currentDate);
+                notifyItemInserted(items.size() - 1);
+            }
+            items.add(message);
+            notifyItemInserted(items.size() - 1);
+        }
+
+        public void addTypingIndicator(ChatMessage typingMessage) {
+            String senderId = typingMessage.getSenderId();
+            if (typingIndicators.containsKey(senderId)) {
+                int position = typingIndicators.get(senderId);
+                items.set(position, typingMessage);
+                notifyItemChanged(position);
+            } else {
+                items.add(typingMessage);
+                typingIndicators.put(senderId, items.size() - 1);
+                notifyItemInserted(items.size() - 1);
+            }
+        }
+
+        public void removeTypingIndicator(String senderId) {
+            if (typingIndicators.containsKey(senderId)) {
+                int position = typingIndicators.get(senderId);
+                items.remove(position);
+                typingIndicators.remove(senderId);
+                notifyItemRemoved(position);
+
+                Map<String, Integer> newMap = new HashMap<>();
+                for (Map.Entry<String, Integer> entry : typingIndicators.entrySet()) {
+                    String id = entry.getKey();
+                    int pos = entry.getValue();
+                    if (pos > position) pos--;
+                    newMap.put(id, pos);
+                }
+                typingIndicators.clear();
+                typingIndicators.putAll(newMap);
+            }
+        }
+
+        public void updateMessageStatus(String messageId, boolean isRead) {
+            for (int i = 0; i < items.size(); i++) {
+                Object item = items.get(i);
+                if (item instanceof ChatMessage) {
+                    ChatMessage message = (ChatMessage) item;
+                    if (message.getId().equals(messageId)) {
+                        message.setRead(isRead);
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String message = messages.get(position);
-            String[] parts = message.split(": ", 2);
-            if (parts.length == 2) {
-                holder.tvSender.setText(parts[0]);
-                holder.tvMessage.setText(parts[1]);
-
-                GradientDrawable bubbleDrawable = (GradientDrawable) holder.bubble.getBackground().mutate();
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.bubble.getLayoutParams();
-
-                if (parts[0].equals("Me")) {
-                    // Sent message (right aligned)
-                    params.gravity = Gravity.END;
-                    bubbleDrawable.setColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chat_message_sent));
-                    holder.tvSender.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
-                    holder.tvMessage.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
-                } else {
-                    // Received message (left aligned)
-                    params.gravity = Gravity.START;
-                    bubbleDrawable.setColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chat_message_received));
-                    holder.tvSender.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
-                    holder.tvMessage.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.black));
-                }
-                holder.bubble.setLayoutParams(params);
+        public int getItemViewType(int position) {
+            Object item = items.get(position);
+            if (item instanceof String) {
+                return TYPE_DATE;
+            } else if (item instanceof ChatMessage) {
+                ChatMessage message = (ChatMessage) item;
+                return message.isTyping() ? TYPE_TYPING : TYPE_MESSAGE;
             }
+            return TYPE_MESSAGE;
         }
 
         @Override
         public int getItemCount() {
-            return messages.size();
+            return items.size();
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView tvSender, tvMessage, tvTime;
-            LinearLayout bubble;
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-            ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                tvSender = itemView.findViewById(R.id.tv_sender);
-                tvMessage = itemView.findViewById(R.id.tv_message);
-                tvTime = itemView.findViewById(R.id.tv_time);
-                bubble = itemView.findViewById(R.id.message_bubble);
+            if (viewType == TYPE_DATE) {
+                View view = inflater.inflate(R.layout.item_chat_date, parent, false);
+                return new DateViewHolder(view);
+            } else {
+                View view = inflater.inflate(R.layout.item_chat_message, parent, false);
+                return new MessageViewHolder(view);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder.getItemViewType() == TYPE_DATE) {
+                ((DateViewHolder)holder).bind((String)items.get(position));
+            } else {
+                MessageViewHolder messageHolder = (MessageViewHolder)holder;
+                ChatMessage message = (ChatMessage)items.get(position);
+
+                // Common setup
+                messageHolder.timeText.setText(message.getFormattedTime());
+
+                if (message.isTyping()) {
+                    // Typing indicator setup
+                    messageHolder.messageText.setVisibility(View.GONE);
+                    messageHolder.typingIndicator.setVisibility(View.VISIBLE);
+                    messageHolder.statusIndicator.setVisibility(View.GONE);
+                } else {
+                    // Normal message setup
+                    messageHolder.messageText.setVisibility(View.VISIBLE);
+                    messageHolder.typingIndicator.setVisibility(View.GONE);
+                    messageHolder.messageText.setText(message.getMessage());
+
+                    // Read status
+                    if (message.isMe()) {
+                        messageHolder.statusIndicator.setVisibility(View.VISIBLE);
+                        messageHolder.statusIndicator.setText(
+                                message.isRead() ? "✓✓" : (message.isDelivered() ? "✓" : "")
+                        );
+                        messageHolder.statusIndicator.setTextColor(
+                                message.isRead() ? Color.BLUE : Color.GRAY
+                        );
+                    } else {
+                        messageHolder.statusIndicator.setVisibility(View.GONE);
+                    }
+                }
+
+                // Sender name (for received messages)
+                if (message.isMe()) {
+                    messageHolder.senderName.setVisibility(View.GONE);
+                } else {
+                    messageHolder.senderName.setVisibility(View.VISIBLE);
+                    messageHolder.senderName.setText(message.getSenderName());
+                }
+
+                // Bubble styling
+                GradientDrawable bubble = (GradientDrawable)messageHolder.bubble.getBackground().mutate();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)messageHolder.bubble.getLayoutParams();
+
+                if (message.isMe()) {
+                    params.gravity = Gravity.END;
+                    bubble.setColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorPrimary));
+                    messageHolder.messageText.setTextColor(Color.WHITE);
+                    messageHolder.timeText.setTextColor(Color.WHITE);
+                    messageHolder.senderName.setTextColor(Color.WHITE);
+                } else {
+                    params.gravity = Gravity.START;
+                    bubble.setColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.chat_bubble_received));
+                    messageHolder.messageText.setTextColor(Color.BLACK);
+                    messageHolder.timeText.setTextColor(Color.BLACK);
+                    messageHolder.senderName.setTextColor(Color.BLACK);
+                }
+                messageHolder.bubble.setLayoutParams(params);
+            }
+        }
+
+        static class DateViewHolder extends RecyclerView.ViewHolder {
+            TextView dateText;
+
+            DateViewHolder(View view) {
+                super(view);
+                dateText = view.findViewById(R.id.date_text);
+            }
+
+            void bind(String date) {
+                dateText.setText(date);
+            }
+        }
+
+        static class MessageViewHolder extends RecyclerView.ViewHolder {
+            TextView messageText, timeText, senderName, statusIndicator;
+            LinearLayout bubble;
+            ProgressBar typingIndicator;
+
+            MessageViewHolder(View view) {
+                super(view);
+                messageText = view.findViewById(R.id.message_text);
+                timeText = view.findViewById(R.id.time_text);
+                senderName = view.findViewById(R.id.sender_name);
+                statusIndicator = view.findViewById(R.id.status_indicator);
+                bubble = view.findViewById(R.id.message_container);
+                typingIndicator = view.findViewById(R.id.typing_indicator);
             }
         }
     }
+    private void saveMessageToDatabase(String senderId, String recipientId, String message, MessageCallback callback) {
+        String url = BASE_URL + "/saveMessage.php";
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String messageId = jsonObject.getString("id");
+                        String timestampStr = jsonObject.getString("timestamp");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date timestamp = sdf.parse(timestampStr);
+
+                        callback.onSuccess(messageId, timestamp);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to parse saved message response", e);
+                    }
+                },
+                error -> Log.e(TAG, "Failed to save message", error)) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("sender_id", senderId);
+                params.put("recipient_id", recipientId);
+                params.put("message", message);
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(requireContext()).add(request);
+    }
+
 }
