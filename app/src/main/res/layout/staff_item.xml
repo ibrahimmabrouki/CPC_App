@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    android:gravity="center_vertical">
+    android:padding="12dp">
 
     <FrameLayout
+        android:id="@+id/profile_container"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/profile_circle_background"
@@ -22,12 +21,24 @@
 
     <TextView
         android:id="@+id/staff_name"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_toEndOf="@id/profile_container"
+        android:layout_centerVertical="true"
         android:layout_marginStart="12dp"
         android:textColor="@color/primary_dark"
         android:textSize="16sp"
         android:text="Staff Name"
         android:textStyle="bold" />
-</LinearLayout>
+
+    <View
+        android:id="@+id/unread_dot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/unread_dot_background"
+        android:layout_alignEnd="@id/profile_container"
+        android:layout_alignTop="@id/profile_container"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:visibility="gone"/>
+</RelativeLayout>

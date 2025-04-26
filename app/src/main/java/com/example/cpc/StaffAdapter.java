@@ -25,6 +25,7 @@ public class StaffAdapter extends ArrayAdapter<StaffItem> {
 
         ImageView imgProfile = convertView.findViewById(R.id.img_profile);
         TextView tvName = convertView.findViewById(R.id.staff_name);
+        View unreadDot = convertView.findViewById(R.id.unread_dot);
 
         tvName.setText(staff.getName());
 
@@ -34,6 +35,12 @@ public class StaffAdapter extends ArrayAdapter<StaffItem> {
             imgProfile.setImageResource(R.drawable.ic_profile_pharmacist);
         } else if (staff.getType().equalsIgnoreCase("lab")) {
             imgProfile.setImageResource(R.drawable.ic_profile_lab);
+        }
+
+        if (staff.hasUnread()) {
+            unreadDot.setVisibility(View.VISIBLE);
+        } else {
+            unreadDot.setVisibility(View.GONE);
         }
 
         return convertView;

@@ -90,6 +90,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
         lvStaff.setOnItemClickListener((parent, view, position, id) -> {
             chatWith = staffList.get(position).getId();
             tvChatUsername.setText(staffList.get(position).getName());
+            staffList.get(position).setHasUnread(false);
+            staffAdapter.notifyDataSetChanged();
 
             chatListLayout.setVisibility(View.GONE);
             chatViewLayout.setVisibility(View.VISIBLE);
@@ -145,12 +147,10 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
     private void handleIncomingMessage(String messageLine) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            if (chatWith == null) return;
-
             String[] parts = messageLine.split(": ", 2);
             if (parts.length == 2) {
-                String senderName = parts[0];
-                String content = parts[1];
+                String senderName = parts[0].trim();
+                String content = parts[1].trim();
 
                 boolean isMe = senderName.equals(currentUsername);
 
@@ -163,16 +163,45 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
 
                 addMessageWithDate(message);
 
-                for (StaffItem staff : staffList) {
-                    if (staff.getName().equals(senderName) && staff.getId().equals(chatWith)) {
-                        markMessagesAsRead(staff.getId(), currentUserId);
-                        break;
+                boolean chattingWithSender = false;
+                if (chatWith != null) {
+                    for (StaffItem staff : staffList) {
+                        if (staff.getName().trim().equalsIgnoreCase(senderName.trim()) && staff.getId().equals(chatWith)) {
+                            chattingWithSender = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (chattingWithSender) {
+                    for (StaffItem staff : staffList) {
+                        if (staff.getName().trim().equalsIgnoreCase(senderName.trim())) {
+                            markMessagesAsRead(staff.getId(), currentUserId);
+                            break;
+                        }
+                    }
+                } else {
+                    for (StaffItem staff : staffList) {
+                        if (staff.getName().trim().equalsIgnoreCase(senderName.trim())) {
+                            staff.setHasUnread(true);
+                            staffAdapter.notifyDataSetChanged();
+                            break;
+                        }
                     }
                 }
             }
         });
     }
 
+
+    private StaffItem findStaffByName(String name) {
+        for (StaffItem staff : staffList) {
+            if (staff.getName().trim().equalsIgnoreCase(name.trim())) {
+                return staff;
+            }
+        }
+        return null;
+    }
 
     private void sendMessage() {
         String message = etMessage.getText().toString().trim();
