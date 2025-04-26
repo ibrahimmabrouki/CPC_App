@@ -57,7 +57,7 @@ public class DoctorCustomeAdapter extends BaseAdapter
 
             // 🖌 APPLY THE STYLING HERE (THIS IS THE PART I MEANT!)
             textView.setTextSize(18); // Smaller, clean
-            textView.setGravity(Gravity.CENTER); // Center text
+            textView.setGravity(Gravity.LEFT); // Center text
             textView.setPadding(0, 24, 0, 24); // Top and bottom padding
             textView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD); // Use clean bold font
             textView.setTextColor(ContextCompat.getColor(context, R.color.black)); // Text color black
@@ -65,7 +65,7 @@ public class DoctorCustomeAdapter extends BaseAdapter
             textView = (TextView) convertView;
         }
 
-        textView.setText("Doctor Name " + doctorsList.get(position)); // Set the name
+        textView.setText("Doctor " + doctorsList.get(position)); // Set the name
 
         return textView;
     }
