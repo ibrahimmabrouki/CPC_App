@@ -175,10 +175,8 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                 }
 
                 if (chattingWithSender) {
-                    // User is already inside the chat -> mark as read immediately
                     markMessagesAsRead(chatWith, currentUserId);
                 } else {
-                    // Otherwise show unread dot
                     for (StaffItem staff : staffList) {
                         if (staff.getName().trim().equalsIgnoreCase(senderName.trim())) {
                             staff.setHasUnread(true);
@@ -186,10 +184,40 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
                             break;
                         }
                     }
+                    showIncomingMessageNotification(senderName, content);
                 }
             }
         });
     }
+
+    private void showIncomingMessageNotification(String senderName, String messageContent) {
+        String CHANNEL_ID = "chat_messages";
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Chat Messages",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_message)
+                .setContentTitle(senderName)
+                .setContentText(messageContent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(new Random().nextInt(), builder.build());
+        } else {
+            Log.w("NotificationsFragment", "Notification permission not granted");
+        }
+    }
+
 
 
     private StaffItem findStaffByName(String name) {
