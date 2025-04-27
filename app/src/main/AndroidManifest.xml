@@ -33,7 +33,8 @@
         <activity android:name=".GenerateLabResultActivity" />
         <activity
             android:name=".Home_page"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.CPC.NoActionBar"/>
         <activity
             android:name=".OPT_page"
             android:exported="false" />
