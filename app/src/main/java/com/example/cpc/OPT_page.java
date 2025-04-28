@@ -88,10 +88,12 @@ public class OPT_page extends AppCompatActivity {
                 else if (isProbablyEmail(contactInfo) && isValidEmail(contactInfo)) {
                     //Toast.makeText(getApplicationContext(), "this is a valid email", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
+                    startResendCountdown();
                 }
                 else if (isProbablyPhone(contactInfo) && isValidPhone(contactInfo)) {
                     //Toast.makeText(getApplicationContext(), "this is a valid phone number", Toast.LENGTH_SHORT).show();
                     checkIfContactExists(contactInfo);
+                    startResendCountdown();
 
                 }
                 else {
@@ -236,11 +238,11 @@ public class OPT_page extends AppCompatActivity {
                         //making send code disabled
                         sendcontactinfo.setEnabled(false);
                         sendcontactinfo.setTextColor(getResources().getColor(android.R.color.darker_gray));
-                        startResendCountdown();
+                        //startResendCountdown();
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
                                 ContextCompat.checkSelfPermission(OPT_page.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
 
-                            showOtpNotification("OTP Sent", "Check your Email for the 6-digit code.");
+                            showOtpNotification("OTP Sent", "Check your Email and Junk for the 6-digit code.");
                         }
 
                         //Toast.makeText(getApplicationContext(), "OTP sent successfully!", Toast.LENGTH_SHORT).show();
