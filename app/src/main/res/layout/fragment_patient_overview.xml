@@ -48,7 +48,6 @@
                 android:dividerHeight="8dp"/>
         </LinearLayout>
 
-        <!-- Announcements Card (unchanged) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,15 +62,15 @@
                 android:text="Announcements"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary_dark"/>
+                android:textColor="@color/primary_dark" />
 
             <TextView
                 android:id="@+id/tvAnnouncements"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="No announcements yet."
                 android:textSize="16sp"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

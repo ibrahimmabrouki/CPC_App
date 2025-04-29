@@ -1,83 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/light_gray"
     android:padding="16dp"
     tools:context=".patient_appointments">
 
-    <!-- Page Title -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Schedule"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary_dark"
-        android:layout_marginBottom="12dp" />
-
-    <!-- Calendar Section -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a Date"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"
-        android:textColor="@color/black"/>
+        android:orientation="vertical">
 
-    <CalendarView
-        android:id="@+id/appointmentCalendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/calendar_patient_bg"/>
+        <!-- Page Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_dark"
+            android:layout_marginBottom="12dp" />
 
-    <!-- Time Slot Section -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Available Time Slots"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"
-        android:textColor="@color/black"/>
+        <!-- Calendar Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select a Date"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/black"/>
 
-    <Spinner
-        android:id="@+id/timeSlotSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/spinner_pateint_bg" />
+        <CalendarView
+            android:id="@+id/appointmentCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/calendar_patient_bg"/>
 
-    <!-- Reason Section -->
-    <EditText
-        android:id="@+id/reasonForVisit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Reason for visit"
-        android:inputType="textCapSentences"
-        android:background="@drawable/input_patient_bg"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        <!-- Time Slot Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Available Time Slots"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/black"/>
 
-    <!-- Doctor Spinner -->
-    <Spinner
-        android:id="@+id/doctorSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/spinner_pateint_bg"
-        android:layout_marginBottom="24dp" />
+        <Spinner
+            android:id="@+id/timeSlotSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/spinner_pateint_bg"
+            android:popupBackground="@drawable/spinner_pateint_bg"/>
 
-    <!-- Submit Button -->
-    <Button
-        android:id="@+id/submitAppointment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm Appointment"
-        android:textSize="16sp"
-        android:backgroundTint="@color/primary"
-        android:textColor="@android:color/white" />
-</LinearLayout>
+        <!-- Reason Section -->
+        <EditText
+            android:id="@+id/reasonForVisit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Reason for visit"
+            android:inputType="textCapSentences"
+            android:background="@drawable/input_patient_bg"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Doctor Spinner -->
+        <Spinner
+            android:id="@+id/doctorSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_pateint_bg"
+            android:popupBackground="@drawable/spinner_pateint_bg"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitAppointment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Appointment"
+            android:textSize="16sp"
+            android:backgroundTint="@color/primary"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</ScrollView>

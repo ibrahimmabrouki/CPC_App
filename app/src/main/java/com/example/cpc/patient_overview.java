@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
@@ -30,7 +31,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
     private String userId;
     private ListView appointmentsListView;
     private TextView tvGreeting;
-
+    private TextView tvAnnouncements;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
         //userId = "4";
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("user_id", null);
-
+        tvAnnouncements = view.findViewById(R.id.tvAnnouncements);
         tvGreeting = view.findViewById(R.id.tvGreeting);
         /*if (getArguments() != null) {
             //userId = getArguments().getString("user_id");  // Retrieve the patient user ID passed as an argument
@@ -48,9 +49,32 @@ public class patient_overview extends Fragment implements RefreshableFragment {
         }*/
         fetchUsername(userId);
         fetchAppointments(userId);
-
+        fetchAnnouncements();
         appointmentsListView = view.findViewById(R.id.appointments_lv);
         return view;
+    }
+    private void fetchAnnouncements() {
+        String url = "http://10.21.134.17/clinic/getAnnouncements.php";
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String content = obj.getString("content");
+                            String date = obj.getString("date_only");
+                            builder.append("• ").append(content).append(" (").append(date).append(")\n");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    tvAnnouncements.setText(builder.length() > 0 ? builder.toString().trim() : "No announcements yet.");
+                },
+                error -> {
+                    tvAnnouncements.setText("Error fetching announcements.");
+                });
+
+        Volley.newRequestQueue(requireContext()).add(request);
     }
     private void fetchUsername(String userId) {
         String url = "http://10.21.134.17/clinic/get_patient_username.php?id=" + userId;
