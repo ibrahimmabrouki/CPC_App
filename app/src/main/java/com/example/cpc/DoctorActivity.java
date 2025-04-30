@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,7 +35,7 @@ public class DoctorActivity extends AppCompatActivity {
     private Runnable pollingRunnable;
     private final String BASE_URL = "http://10.21.134.17/clinic";
     private String currentUserId = "";
-
+    private boolean doubleBackToExitPressedOnce = false; //for pressing back twice to get you out
     private boolean isInChatFragment = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +119,20 @@ public class DoctorActivity extends AppCompatActivity {
                 ((RefreshableFragment) currentFragment).onRefresh();
             }
             return true;
+        } else if (item.getItemId() ==R.id.action_logout) {
+            getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply();
+            Intent out = new Intent(this, Home_page.class);
+            out.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(out);
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void startMessagePolling() {
         pollingHandler = new Handler(Looper.getMainLooper());
@@ -209,6 +222,23 @@ public class DoctorActivity extends AppCompatActivity {
             }
         }
         manager.notify(new Random().nextInt(), builder.build());
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity();
+            super.onBackPressed();
+            return;
+        }
+        doubleBackToExitPressedOnce = true;
+        Toast.makeText(this,
+                "Press back again to exit",
+                Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> doubleBackToExitPressedOnce = false,
+                2000
+        );
     }
 
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.SharedPreferences;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -46,18 +47,48 @@ public class SplashActivity extends AppCompatActivity {
                 .start();
 
         new Handler().postDelayed(() -> {
+            //for testing
+
             //startActivity(new Intent(SplashActivity.this, DoctorActivity.class));
             //startActivity(new Intent(SplashActivity.this, PharmacistActivity.class));
             //startActivity(new Intent(SplashActivity.this, LabTechnicianActivity.class));
             //startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             //startActivity(new Intent(SplashActivity.this, OPT_page.class));
-            startActivity(new Intent(SplashActivity.this, Home_page.class));
+            //startActivity(new Intent(SplashActivity.this, Home_page.class));
             //startActivity(new Intent(SplashActivity.this, CreateAccount.class));
             //startActivity(new Intent(SplashActivity.this, ChangePassword.class));
            //startActivity(new Intent(SplashActivity.this, PatientHomePageActivity.class));
 
 
+            SharedPreferences prefs = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+            boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+            if (isLoggedIn) {
+                String role   = prefs.getString("userType", "");
+                String userId = prefs.getString("user_id", "");
 
+                Intent target;
+                switch (role) {
+                    case "Doctor":
+                        target = new Intent(SplashActivity.this, DoctorActivity.class);
+                        break;
+                    case "Patient":
+                        target = new Intent(SplashActivity.this, PatientHomePageActivity.class);
+                        break;
+                    case "Pharmacist":
+                        target = new Intent(SplashActivity.this, PharmacistActivity.class);
+                        break;
+                    case "Lab Technician":
+                        target = new Intent(SplashActivity.this, LabTechnicianActivity.class);
+                        break;
+                    default:
+                        target = new Intent(SplashActivity.this, Home_page.class);
+                }
+                target.putExtra("user_id", userId);
+                startActivity(target);
+
+            } else {
+                startActivity(new Intent(SplashActivity.this, Home_page.class));
+            }
 
             finish();
         }, 1800);

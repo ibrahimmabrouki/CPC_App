@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class LabTechnicianActivity extends AppCompatActivity {
     private String currentUserId = "";
     private Handler pollingHandler;
     private Runnable pollingRunnable;
+    private boolean doubleBackToExitPressedOnce = false; //for pressing back twice to get you out
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +185,34 @@ public class LabTechnicianActivity extends AppCompatActivity {
                 ((RefreshableFragment) currentFragment).onRefresh();
             }
             return true;
+        }else if (item.getItemId() ==R.id.action_logout) {
+            getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply();
+            Intent out = new Intent(this, Home_page.class);
+            out.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(out);
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity();
+            super.onBackPressed();
+            return;
+        }
+        doubleBackToExitPressedOnce = true;
+        Toast.makeText(this,
+                "Press back again to exit",
+                Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> doubleBackToExitPressedOnce = false,
+                2000
+        );
     }
 }

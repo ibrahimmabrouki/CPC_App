@@ -220,6 +220,8 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("user_id", userId);
+                            editor.putBoolean("isLoggedIn", true);
+                            editor.putString("userType", userType);
                             editor.apply();
 
                             setContentView(R.layout.activity_success_screen);

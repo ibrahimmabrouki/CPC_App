@@ -1,8 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">  <!-- Added this line -->
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_refresh"
         android:icon="@android:drawable/ic_popup_sync"
         android:title="Refresh"
         app:showAsAction="ifRoom" />
+
+    <!--for logout-->
+    <item
+           android:id="@+id/action_logout"
+           android:icon="@drawable/ic_baseline_logout_24"
+           android:title="Logout"
+           app:showAsAction="always" />
 </menu>
