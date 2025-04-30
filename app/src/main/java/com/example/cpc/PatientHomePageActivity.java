@@ -2,9 +2,12 @@ package com.example.cpc;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,6 +29,7 @@ public class PatientHomePageActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityPatientHomePageBinding binding;
     String userId;
+    private boolean doubleBackToExitPressedOnce = false; //for pressing back twice to get you out
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,16 @@ public class PatientHomePageActivity extends AppCompatActivity {
                 ((RefreshableFragment) currentFragment).onRefresh();
             }
             return true;
+        }else if (item.getItemId() ==R.id.action_logout) {
+            getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply();
+            Intent out = new Intent(this, Home_page.class);
+            out.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(out);
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -114,5 +128,22 @@ public class PatientHomePageActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_patient_home_page);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity();
+            super.onBackPressed();
+            return;
+        }
+        doubleBackToExitPressedOnce = true;
+        Toast.makeText(this,
+                "Press back again to exit",
+                Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> doubleBackToExitPressedOnce = false,
+                2000
+        );
     }
 }

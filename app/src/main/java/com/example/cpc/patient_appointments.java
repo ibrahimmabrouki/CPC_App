@@ -189,7 +189,8 @@ public class patient_appointments extends Fragment implements RefreshableFragmen
                 params.put("doctor_name", doctorName); // e.g., "Layla Farah"
                 params.put("date", date);
                 params.put("time", time);
-                params.put("reason_for_visit", reason);                return params;
+                params.put("reason_for_visit", reason);
+                return params;
             }
         };
 
