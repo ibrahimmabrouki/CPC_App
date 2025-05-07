@@ -117,7 +117,7 @@ public class NotificationsFragment extends Fragment implements RefreshableFragme
             currentUsername = username;
             new Thread(() -> {
                 try {
-                    socket = new Socket("10.21.134.17", 8888);
+                    socket = new Socket("10.21.139.29", 8888);
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     writer = new PrintWriter(socket.getOutputStream(), true);
 
