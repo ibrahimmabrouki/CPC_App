@@ -87,7 +87,7 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     private void sendPasswordUpdateRequest(String contactValue, String new_password) {
-        String url = "http://10.21.134.17/clinic/ResetPassword/update_password.php";
+        String url = "http://10.21.139.29/clinic/ResetPassword/update_password.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

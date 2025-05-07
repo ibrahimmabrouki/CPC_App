@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 public class ViewGeneratedResultActivity extends AppCompatActivity {
 
-    private final String BASE_URL = "http://10.21.134.17/clinic";
+    private final String BASE_URL = "http://10.21.139.29/clinic";
     private TextView tvResultContent;
     private Button btnEdit;
     private int recordId, patientId, doctorId;

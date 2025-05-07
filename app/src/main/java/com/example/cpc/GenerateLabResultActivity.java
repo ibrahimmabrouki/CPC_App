@@ -19,7 +19,7 @@ public class GenerateLabResultActivity extends AppCompatActivity {
 
     private EditText etResultContent;
     private int recordId, patientId, doctorId;
-    private final String BASE_URL = "http://10.21.134.17/clinic";
+    private final String BASE_URL = "http://10.21.139.29/clinic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

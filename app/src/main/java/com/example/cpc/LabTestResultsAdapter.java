@@ -22,7 +22,7 @@ public class LabTestResultsAdapter extends RecyclerView.Adapter<LabTestResultsAd
 
     private final List<LabTestRecord> records;
     private final Context context;
-    private final String BASE_URL = "http://10.21.134.17/clinic";
+    private final String BASE_URL = "http://10.21.139.29/clinic";
 
     public LabTestResultsAdapter(Context context, List<LabTestRecord> records) {
         this.context = context;

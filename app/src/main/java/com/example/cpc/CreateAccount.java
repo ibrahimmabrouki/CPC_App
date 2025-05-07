@@ -320,7 +320,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void signUpUser(String type, String input, String password, String username) {
-        String url = "http://10.21.134.17/clinic/signup.php";
+        String url = "http://10.21.139.29/clinic/signup.php";
 
         // Create the StringRequest for POST request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -375,7 +375,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
     private void checkUsernameAvailability(String username, UsernameCheckCallback callback) {
-        String url = "http://10.21.134.17/clinic/check_username.php";
+        String url = "http://10.21.139.29/clinic/check_username.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -414,7 +414,7 @@ public class CreateAccount extends AppCompatActivity {
 
 
     private void checkContactAvailability(String contactValue, ContactCheckCallback callback) {
-        String url = "http://10.21.134.17/clinic/check_contact_value.php";
+        String url = "http://10.21.139.29/clinic/check_contact_value.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

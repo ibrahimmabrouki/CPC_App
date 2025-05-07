@@ -54,7 +54,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
         return view;
     }
     private void fetchAnnouncements() {
-        String url = "http://10.21.134.17/clinic/getAnnouncements.php";
+        String url = "http://10.21.139.29/clinic/getAnnouncements.php";
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
                     StringBuilder builder = new StringBuilder();
@@ -77,7 +77,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
         Volley.newRequestQueue(requireContext()).add(request);
     }
     private void fetchUsername(String userId) {
-        String url = "http://10.21.134.17/clinic/get_patient_username.php?id=" + userId;
+        String url = "http://10.21.139.29/clinic/get_patient_username.php?id=" + userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
 
@@ -114,7 +114,7 @@ public class patient_overview extends Fragment implements RefreshableFragment {
     }
 
     private void fetchAppointments(String userId) {
-        String url = "http://10.21.134.17/clinic/get_appointments_by_patient.php?patient_id=" + userId;
+        String url = "http://10.21.139.29/clinic/get_appointments_by_patient.php?patient_id=" + userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 

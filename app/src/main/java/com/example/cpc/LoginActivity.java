@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loginUser(String input, String password) {
-        String url = "http://10.21.134.17/clinic/login.php";
+        String url = "http://10.21.139.29/clinic/login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

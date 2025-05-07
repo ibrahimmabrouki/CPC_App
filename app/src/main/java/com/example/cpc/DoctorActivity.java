@@ -33,7 +33,7 @@ import java.util.Random;
 public class DoctorActivity extends AppCompatActivity {
     private Handler pollingHandler;
     private Runnable pollingRunnable;
-    private final String BASE_URL = "http://10.21.134.17/clinic";
+    private final String BASE_URL = "http://10.21.139.29/clinic";
     private String currentUserId = "";
     private boolean doubleBackToExitPressedOnce = false; //for pressing back twice to get you out
     private boolean isInChatFragment = false;

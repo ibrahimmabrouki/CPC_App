@@ -209,7 +209,7 @@ public class Home_page extends AppCompatActivity {
         }
     }
     private void getDoctorsFromServer() {
-        String url = "http://10.21.134.17/clinic/get_doctors.php";
+        String url = "http://10.21.139.29/clinic/get_doctors.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
